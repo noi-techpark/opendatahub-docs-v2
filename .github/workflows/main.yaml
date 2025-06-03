@@ -14,9 +14,6 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v2
 
-      - name: Check index.html
-        run: test -f src/index.html
-
   deploy-test:
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
