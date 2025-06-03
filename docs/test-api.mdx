@@ -3,10 +3,7 @@ sidebar_position: 2
 slug: /test-api
 ---
 
-import SwaggerUI from 'swagger-ui-react'
-import 'swagger-ui-react/swagger-ui.css'
-import '@site/src/css/swagger-dark-fix.css';
-
+import SwaggerUIWrapper from '@site/src/components/SwaggerUIWrapper';
 
 # API Reference: Mobility ODH
 
@@ -17,4 +14,8 @@ This page demonstrates **an API viewer** for the same OpenAPI spec:
 
 ## ⚙️ Swagger UI (Interactive)
 
-<SwaggerUI url="https://mobility.api.opendatahub.com/v2/apispec" tryItOutEnabled="true"/>
+<SwaggerUIWrapper
+  url="https://mobility.api.opendatahub.com/v2/apispec"
+  docExpansion="none"
+  tryItOutEnabled={true}
+/>
