@@ -21,7 +21,7 @@ jobs:
     environment: test
     concurrency: deploy-test
     env: 
-      AWS_S3_BUCKET_NAME : 'opendatahub-docs-test'
+      AWS_S3_BUCKET_NAME : 'opendatahub-web-docs-test'
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
