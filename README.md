@@ -24,18 +24,16 @@ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-## Deployment
+## Docs to PDF
 
-Using SSH:
+Below are the commands to generate a PDF starting from Docusaurus. The plugin is a scraper which navigates the documentation using "next buttons" in the footer of the page.
 
-```bash
-USE_SSH=true yarn deploy
+https://github.com/jean-humann/docs-to-pdf
+
+```
+npm install -g docs-to-pdf
 ```
 
-Not using SSH:
-
-```bash
-GIT_USER=<Your GitHub username> yarn deploy
 ```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+npx docs-to-pdf docusaurus --initialDocURLs="[url_of_page_you_want_scrape_from]" --contentSelector="article"  --paginationSelector="a.pagination-nav__link.pagination-nav__link--next"
+``
