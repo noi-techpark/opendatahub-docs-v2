@@ -42,14 +42,7 @@ const config: Config = {
     [
       'classic',
       {
-        docs: {
-          routeBasePath: '/', // Serve the docs at the site's root
-          sidebarPath: './sidebars.ts',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
+        docs: false,
         blog: {
           showReadingTime: true,
           feedOptions: {
@@ -72,6 +65,37 @@ const config: Config = {
     ],
   ],
 
+  plugins: [
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        path: 'docs/tutorial',
+        routeBasePath: '/',
+        sidebarPath: require.resolve('./sidebarsGeneral.ts'),
+        // Only include root-level files (not core/ or data/)
+        // include: ['intro.md', 'test-api.mdx'],
+      },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'core',
+        path: 'docs/core',
+        routeBasePath: 'core',
+        sidebarPath: require.resolve('./sidebarsCore.ts'),
+      },
+    ],
+    // [
+    //   '@docusaurus/plugin-content-docs',
+    //   {
+    //     id: 'data',
+    //     path: 'docs/data',
+    //     routeBasePath: 'data',
+    //     sidebarPath: require.resolve('./sidebarsData.ts'),
+    //   },
+    // ],
+  ],
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
@@ -87,355 +111,113 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'generalSidebar',
           position: 'left',
           label: 'Tutorial',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
-        {
-          href: 'https://github.com/facebook/docusaurus',
-          label: 'GitHub',
-          position: 'right',
-        },
+        // {to: '/blog', label: 'Blog', position: 'left'},
         {
           label: 'Build',
           to: '#',
           layout: [
             '0 1 2 3',
             '0 1 2 3',
-            '. 1 2 3',
-            '. 1 2 .',
+            '0 1 2 3',
+            '0 1 2 .',
           ],
           items_: [
             {
-              label: 'Getting Started',
+              label: 'Core',
+              items: [
+                {
+                  label: 'Concepts',
+                  sublabel: 'Explore Open Data Hub architecture and concepts',
+                  to: 'core/concepts/intro',
+                  icon: 'FaSitemap',
+                  activeBaseRegex: '^/core/concepts/*',
+                },
+                {
+                  label: 'Deploy & Operate in K8s',
+                  sublabel: 'Deploy and operate Open Data Hub in production',
+                  to: 'core/k8s/intro',
+                  icon: 'PiGraph',
+                  activeBaseRegex: '^/core/k8s/*',
+                },
+              ],
+            },
+            {
+              label: 'Ingestion & Elaborations',
               items: [
                 {
                   label: 'Getting Started',
-                  sublabel: 'Open Data Hub development basics',
-                  to: 'http://opendatahub.com/api/',
+                  sublabel: 'Deploy Open Data core locally',
+                  to: 'data/getting-started/intro',
                   icon: 'FaRocket',
+                  activeBaseRegex: '^/data/getting-started/*',
+                },
+                {
+                  label: 'Development',
+                  sublabel: 'Contribute creating new data pipelines',
+                  to: 'data/development/intro',
+                  icon: 'FaWrench',
+                  activeBaseRegex: '^/data/development/*',
                 },
               ],
             },
             {
-              label: 'Protocols',
+              label: 'Using our Data',
               items: [
-                {
-                  label: 'GraphQL',
-                  sublabel: 'Access the Open Data Hub graph through GraphQL',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue908',
-                  activeBaseRegex: '^/protocols/graphql.*',
-                },
-                {
-                  label: 'gRPC',
-                  sublabel: 'Efficiently integrate APIs via protobuf requests',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue908',
-                  activeBaseRegex: '^/protocols/grpc.*',
-                },
-                {
-                  label: 'REST',
-                  sublabel: 'Access APIs via traditional JSON requests',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue908',
-                  activeBaseRegex: '^/protocols/rest.*',
-                },
+                
               ],
             },
             {
-              label: 'Authentication',
+              label: 'Tools',
               items: [
-                {
-                  label: 'OAuth 2.0',
-                  sublabel: 'Integrate applications with Open Data Hub',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue905',
-                  activeBaseRegex: '^/authentication/oauth2.*',
-                },
-                {
-                  label: 'OpenID Connect',
-                  sublabel: 'Use Open Data Hub as identity provider',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue905',
-                  activeBaseRegex: '^/authentication/openid-connect.*',
-                },
-                {
-                  label: 'Service Accounts',
-                  sublabel: 'Grant access to non-human accounts',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue905',
-                  activeBaseRegex: '^/authentication/service-accounts.*',
-                },
-              ],
-            },
-            {
-              label: 'Policies',
-              items: [
-                {
-                  label: 'Rate-Limiting',
-                  sublabel: 'Learn how requests frequency is limited',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue909',
-                  activeBaseRegex: '^/policies/rate-limiting.*',
-                },
-                {
-                  label: 'Quotas',
-                  sublabel: 'Learn how resources consumption is limited',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue909',
-                  activeBaseRegex: '^/policies/quotas.*',
-                },
+                
               ],
             },
           ],
         },
         {
-          label: 'Products',
+          label: 'APIs',
           to: '#',
           layout: [
-            '0 2 5 7',
-            '0 2 5 7',
-            '0 2 5 7',
-            '0 3 5 8',
-            '1 3 6 8',
-            '1 4 6 .',
-            '1 4 6 .',
-            // '0 2 5 7',
-            // '0 2 5 7',
-            // '0 2 5 7',
-            // '0 3 5 7',
-            // '0 3 5 7',
-            // '1 4 6 7',
-            // '1 4 6 7',
-            // '1 . 6 8',
-            // '1 . 6 8',
+            '0 1 2 3',
+            '0 1 2 3',
           ],
           items_: [
             {
-              label: 'Knowledge-Base APIs',
+              label: 'Content APIs',
               items: [
-                // {
-                //   label: 'Bridge',
-                //   sublabel: 'Access links across external references',
-                //   to: 'tutorial-basics/congratulations',
-                //   icon: '\ue903',
-                //   activeBaseRegex: '^/bridge/.*',
-                // },
                 {
-                  label: 'Cross-Reference',
-                  sublabel: 'Easily match internal and external resources',
+                  label: 'Swagger',
+                  sublabel: 'Try out our latest Content API schema with real data',
                   to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
                   activeBaseRegex: '^/crossrefs/.*',
                 },
-                {
-                  label: 'Knowledge',
-                  sublabel: 'Contribute to the graph knowledge-base',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/knowledge/.*',
-                },
-                {
-                  label: 'Multimedia',
-                  sublabel: 'Open Data Hub source-of-truth for abstract resources',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/multimedia/.*',
-                },
               ],
             },
             {
-              label: 'Publishing APIs',
+              label: 'Timeseries APIs',
               items: [
                 {
-                  label: 'Product',
-                  sublabel: 'Manage physical and digital goods',
+                  label: 'Swagger',
+                  sublabel: 'Try out our latest Timeseries API schema with real data',
                   to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
                   activeBaseRegex: '^/product/.*',
                 },
-                {
-                  label: 'Release',
-                  sublabel: 'Schedule and publish product releases',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/release/.*',
-                },
-                // {
-                //   label: 'Payment',
-                //   sublabel: 'Securely manage payments and subscriptions',
-                //   to: 'tutorial-basics/congratulations',
-                //   icon: '\ue903',
-                //   activeBaseRegex: '^/payment/.*',
-                // },
-              ],
-            },
-            {
-              label: 'User-Experience APIs',
-              items: [
-                {
-                  label: 'Tracker',
-                  sublabel: 'Track the progress of resources',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/tracker/.*',
-                },
-                {
-                  label: 'Library',
-                  sublabel: 'Manage custom collections of resources',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/library/.*',
-                },
-              ],
-            },
-            {
-              label: 'Storage APIs',
-              items: [
-                {
-                  label: 'Image',
-                  sublabel: 'Store images and albums',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/image/.*',
-                },
-              ],
-            },
-            {
-              label: 'AI & Analysis APIs',
-              items: [
-                {
-                  label: 'Vision',
-                  sublabel: 'Analyze and annotate images',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/vision/.*',
-                },
-              ],
-            },
-            {
-              label: 'IAM & Security APIs',
-              items: [
-                {
-                  label: 'Credentials',
-                  sublabel: 'Securely store third-party credentials',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/credentials/.*',
-                },
-                {
-                  label: 'Identity and Access Management',
-                  sublabel: 'Manage service accounts and groups',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/iam/.*',
-                },
-                {
-                  label: 'Identity',
-                  sublabel: 'Manage user profile and settings',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/identity/.*',
-                },
-                // {
-                //   label: 'Resource Manager',
-                //   sublabel: 'Manage organizations and policies',
-                //   to: 'tutorial-basics/congratulations',
-                //   icon: '\ue903',
-                //   activeBaseRegex: '^/resourcemanager/.*',
-                // },
-              ],
-            },
-            {
-              label: 'Indexing APIs',
-              items: [
-                {
-                  label: 'WebCache',
-                  sublabel: 'Keep track of indexed resources',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/webcache/.*',
-                },
-                {
-                  label: 'WebPage',
-                  sublabel: 'Access indexed website pages',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue903',
-                  activeBaseRegex: '^/webpage/.*',
-                },
-                // {
-                //   label: 'WebSearch',
-                //   sublabel: 'Search via images and keywords',
-                //   to: 'websearctutorial-basics/congratulations',
-                //   icon: '\ue903',
-                //   activeBaseRegex: '^/websearch/.*',
-                // },
-              ],
-            },
-            {
-              label: 'Libraries',
-              items: [
-                // {
-                //   label: 'C#',
-                //   sublabel: '.NET Client Libraries',
-                //   to: 'dotnetutorial-basics/congratulations',
-                //   icon: '\ue902',
-                //   activeBaseRegex: '^/dotnet/.*',
-                // },
-                {
-                  label: 'Go',
-                  sublabel: 'Go Client Libraries',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue902',
-                  activeBaseRegex: '^/go/.*',
-                },
-                // {
-                //   label: 'Java',
-                //   sublabel: 'Java Client Libraries',
-                //   to: 'javtutorial-basics/congratulations',
-                //   icon: '\ue902',
-                //   activeBaseRegex: '^/java/.*',
-                // },
-                // {
-                //   label: 'PHP',
-                //   sublabel: 'PHP Client Libraries',
-                //   to: 'phtutorial-basics/congratulations',
-                //   icon: '\ue902',
-                //   activeBaseRegex: '^/php/.*',
-                // },
-                // {
-                //   label: 'Python',
-                //   sublabel: 'Python Client Libraries',
-                //   to: 'pythotutorial-basics/congratulations',
-                //   icon: '\ue902',
-                //   activeBaseRegex: '^/python/.*',
-                // },
-                {
-                  label: 'TypeScript',
-                  sublabel: 'Node.js Client Libraries',
-                  to: 'tutorial-basics/congratulations',
-                  icon: '\ue902',
-                  activeBaseRegex: '^/nodejs/.*',
-                },
-              ],
-            },
-            {
-              label: 'Applications',
-              items: [
-                {
-                  label: 'gRBAC',
-                  sublabel: 'Graph Role-Based Access Control',
-                  href: 'https://github.com/grbac/grbac',
-                  icon: '\ue90a',
-                },
+                
               ],
             },
           ],
         },
-        // { to: 'tutorial-basics/congratulations', label: 'Community Blog', position: 'right' },
-        { to: 'tutorial-basics/congratulations', label: 'Team', position: 'right' },
+        // // { to: 'tutorial-basics/congratulations', label: 'Community Blog', position: 'right' },
+        // { to: 'tutorial-basics/congratulations', label: 'Team', position: 'right' },
+        // {
+        //   href: 'https://github.com/facebook/docusaurus',
+        //   label: 'GitHub',
+        //   position: 'right',
+        // },
       ],
     },
     footer: {
