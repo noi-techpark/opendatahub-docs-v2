@@ -2,7 +2,6 @@
 sidebar_position: 2
 slug: /development/intro
 ---
-
 # Structure:
 A data integration pipeline consists of at least 2 microservices:
 - Data collector: collects raw data and puts it on a message queue
@@ -55,4 +54,47 @@ The API has a [OpenAPI spec](https://swagger.opendatahub.com/?url=https://raw.gi
 While the data collector architecture has changed, the principles of interacting with the writer API still remain the same.
 
 In golang, use the [go-bdp-client](https://github.com/noi-techpark/go-bdp-client) to interact with this API.
-Still, the documentation might be useful to understand the underlying data structures and calls.  
+Still, the documentation might be useful to understand the underlying data structures and calls.  o
+
+# Local development
+## Data collectors
+Data collectors often already have a rabbitmq instance that starts up with them in their `docker-compose.yml` file. Access `http://localhost:15672` to check if messages are sent correctly
+## The whole shebang
+The [Infrastructure repo](https://github.com/noi-techpark/infrastructure-v2) provides docker compose files that replicate the Open Data Hub infrastructure for local development.
+
+There is a base compose `docker-compose.yml` that only starts the bare infrastructure without any domain specific APIs.
+
+```bash
+docker compose -f docker-compose.yml up
+```
+Note: You might see periodic error messages about `traces export: context deadline exceeded` due to telemetry systems not being active. Ignore these.
+
+For developing a Timeseries API integration you will in addition have to start the `docker-compose.timeseries.yml`, which includes inbound and outbound APIs your transformer interacts with.
+
+```bash
+docker compose -f docker-compose.timeseries.yml up
+```
+
+Now you should be able to point your collectors and transformers to these local endpoints. Make sure to run the collectors/transformers in `network_mode: host` if using docker compose.
+
+The boilerplate should already configure your transformer for this by default.  
+Your collector might need some config changes, because often when developing collectors, they have their own dockerized rabbitmq instance that conflicts with the infrastructure-v2 compose.
+
+## Mongodb
+Access the local mongodb with this url, you can use Mongodb Compass for instance
+
+mongodb://localhost:27017/?directConnection=true
+
+## Authentication
+We provide a shared oauth client credentials `odh-mobility-writer-development` and `odh-mobility-datacollector-development` for server and client development respectively.
+
+The datacollector client is authorized to write to the writer client.
+
+Host: https://auth.opendatahub.testingmachine.eu/auth/
+Realm: noi
+Token endpoint: https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token
+
+client_id: odh-mobility-datacollector-development
+client_secret: 7bd46f8f-c296-416d-a13d-dc81e68d0830
+
+
