@@ -85,15 +85,15 @@ const config: Config = {
         sidebarPath: require.resolve('./sidebarsCore.ts'),
       },
     ],
-    // [
-    //   '@docusaurus/plugin-content-docs',
-    //   {
-    //     id: 'data',
-    //     path: 'docs/data',
-    //     routeBasePath: 'data',
-    //     sidebarPath: require.resolve('./sidebarsData.ts'),
-    //   },
-    // ],
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'data',
+        path: 'docs/data',
+        routeBasePath: 'data',
+        sidebarPath: require.resolve('./sidebarsData.ts'),
+      },
+    ],
   ],
 
   themeConfig: {

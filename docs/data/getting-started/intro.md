@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /data/getting-started/intro
+slug: /getting-started/intro
 ---
 
 # Tutorial Intro
