@@ -13,9 +13,9 @@ So the flow will be  `Data provider -> Data collector -> Message Queue -> Transf
 Between data collector and transformer sits a raw data DB and API, the transformer only gets a notification event and has to request the actual raw data from the raw data API. This part is fully handled by the SDK.
 	
 # Repos:
-	[Monorepo for data collectors and transformers](https://github.com/noi-techpark/opendatahub-collectors)
-	[Repo of target writer API that transformers write to](https://github.com/noi-techpark/opendatahub-timeseries-writer)
-	[Infrastructure repo with some docs and compose files](https://github.com/noi-techpark/infrastructure-v2)
+[Monorepo for data collectors and transformers](https://github.com/noi-techpark/opendatahub-collectors)
+[Repo of target writer API that transformers write to](https://github.com/noi-techpark/opendatahub-timeseries-writer)
+[Infrastructure repo with some docs and compose files](https://github.com/noi-techpark/infrastructure-v2)
 
 # Data collector:
 See https://github.com/noi-techpark/opendatahub-collectors/tree/main/collectors.  
