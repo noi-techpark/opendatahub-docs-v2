@@ -80,6 +80,9 @@ Now you should be able to point your collectors and transformers to these local 
 The boilerplate should already configure your transformer for this by default.  
 Your collector might need some config changes, because often when developing collectors, they have their own dockerized rabbitmq instance that conflicts with the infrastructure-v2 compose.
 
+## Rabbitmq
+Rabbitmq runs on http://localhost:15672 with credentials `guest/guest`.  
+Here you can check if queues are populated correctly of if some
 ## Mongodb
 Access the local mongodb with this url, you can use Mongodb Compass for instance
 
@@ -90,11 +93,11 @@ We provide a shared oauth client credentials `odh-mobility-writer-development` a
 
 The datacollector client is authorized to write to the writer client.
 
-Host: https://auth.opendatahub.testingmachine.eu/auth/
-Realm: noi
-Token endpoint: https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token
+Host: https://auth.opendatahub.testingmachine.eu/auth/  
+Realm: noi  
+Token endpoint: https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token  
 
-client_id: odh-mobility-datacollector-development
-client_secret: 7bd46f8f-c296-416d-a13d-dc81e68d0830
+client_id: odh-mobility-datacollector-development  
+client_secret: 7bd46f8f-c296-416d-a13d-dc81e68d0830  
 
 
