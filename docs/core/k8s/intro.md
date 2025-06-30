@@ -1,6 +1,6 @@
 ---
 sidebar_position: 2
-slug: /getting-started/intro
+slug: /k8s/intro
 ---
 
 # Start!
