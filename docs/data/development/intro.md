@@ -13,9 +13,9 @@ So the flow will be  `Data provider -> Data collector -> Message Queue -> Transf
 Between data collector and transformer sits a raw data DB and API, the transformer only gets a notification event and has to request the actual raw data from the raw data API. This part is fully handled by the SDK.
 	
 # Repos:
-[Monorepo for data collectors and transformers](https://github.com/noi-techpark/opendatahub-collectors)
-[Repo of target writer API that transformers write to](https://github.com/noi-techpark/opendatahub-timeseries-writer)
-[Infrastructure repo with some docs and compose files](https://github.com/noi-techpark/infrastructure-v2)
+- [Monorepo for data collectors and transformers](https://github.com/noi-techpark/opendatahub-collectors)
+- [Repo of target writer API that transformers write to](https://github.com/noi-techpark/opendatahub-timeseries-writer)
+- [Infrastructure repo with some docs and compose files](https://github.com/noi-techpark/infrastructure-v2)
 
 # Data collector:
 See https://github.com/noi-techpark/opendatahub-collectors/tree/main/collectors.  
@@ -33,7 +33,6 @@ Up to date are for example:
 When integrating a new data provider consider first if an already existing data collector can cover you use case or could with minor generic modifications.
 
 Currently there is no boilerplate generator for data collectors, you will have to start from scratch or by copying an existing one (we suggest s3-poller for simplicity).
-The wizard will ask you for a two part provider tuple and Origin, you can use placeholders during development, it's a configuration thing.
 
 # Transformers
 See https://github.com/noi-techpark/opendatahub-collectors/tree/main/transformers
@@ -45,8 +44,9 @@ Up to date are for example:
 - parking-offstreet-skidata
 - meteorology-bz-forecast
 
-For transformers we provide a (largely untested) boilerplate generator.
-You can find it at `/transformers/boilerplate/setup_go.sh` and it generates a minimal transformer service that you can extend.
+For transformers we provide a (somewhat untested) boilerplate generator.  
+You can find it at `/transformers/boilerplate/setup_go.sh` and it generates a minimal transformer service that you can extend.  
+The wizard will ask you for a two part provider tuple and Origin, you can use placeholders during development, they just have to match the tuple provided in the collectors.
 
 # Documentation writer API:
 Some documentation about writing legacy style data collectors can be found [here](https://github.com/noi-techpark/opendatahub-docs/wiki/Getting-started-with-a-new-Data-Collector-development).  
