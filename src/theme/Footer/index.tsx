@@ -1,24 +1,50 @@
-import React, {type ReactNode} from 'react';
+import React, { type ReactNode } from 'react';
+import { useThemeConfig } from '@docusaurus/theme-common';
+import FooterLayout from './Layout';
 
-import {useThemeConfig} from '@docusaurus/theme-common';
-import FooterLinks from '@theme/Footer/Links';
-import FooterLogo from '@theme/Footer/Logo';
-import FooterCopyright from '@theme/Footer/Copyright';
-import FooterLayout from '@theme/Footer/Layout';
+type CustomThemeConfig = {
+  footer?: any;
+  customFields?: {
+    footer?: {
+      cards?: Array<{
+        URL: string;
+        target_blank?: boolean;
+        icon: string;
+        alttext: string;
+        text: string;
+      }>;
+      columns?: Array<{
+        title: string;
+        title_URL?: string;
+        isSocial?: boolean;
+        rows: Array<{
+          text: string;
+          URL: string;
+          target_blank?: boolean;
+          icon?: string;
+        }>;
+      }>;
+    };
+  };
+};
 
 function Footer(): ReactNode {
-  const {footer} = useThemeConfig();
-  if (!footer) {
+  const themeConfig = useThemeConfig() as CustomThemeConfig;
+  const { footer, customFields } = themeConfig;
+
+  if (!footer && !customFields?.footer) {
     return null;
   }
-  const {copyright, links, logo, style} = footer;
+
+  const { style, copyright } = footer ?? {};
+  const { cards, columns } = customFields?.footer ?? {};
 
   return (
     <FooterLayout
       style={style}
-      links={links && links.length > 0 && <FooterLinks links={links} />}
-      logo={logo && <FooterLogo logo={logo} />}
-      copyright={copyright && <FooterCopyright copyright={copyright} />}
+      cards={cards}
+      columns={columns}
+      copyright={copyright}
     />
   );
 }

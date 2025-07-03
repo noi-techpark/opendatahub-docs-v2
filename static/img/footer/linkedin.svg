@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   xml:space="preserve"
+   id="svg6"
+   sodipodi:docname="linkedin.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><defs
+   id="defs10" /><sodipodi:namedview
+   id="namedview8"
+   pagecolor="#ffffff"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   showgrid="false"
+   inkscape:zoom="0.921875"
+   inkscape:cx="126.91525"
+   inkscape:cy="127.45763"
+   inkscape:window-width="1920"
+   inkscape:window-height="1123"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="svg6" />
+<g
+   style="opacity:1;fill:none;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+   transform="scale(0.17777778)"
+   id="g4">
+	<path
+   d="M 83.349,0 H 6.651 C 2.978,0 0,2.887 0,6.447 V 83.553 C 0,87.114 2.978,90 6.651,90 H 83.349 C 87.022,90 90,87.114 90,83.553 V 6.447 C 90,2.887 87.022,0 83.349,0 Z M 27.282,75.339 H 13.688 V 34.699 H 27.282 Z M 20.485,29.151 h -0.088 c -4.562,0 -7.512,-3.121 -7.512,-7.021 0,-3.988 3.04,-7.022 7.69,-7.022 4.651,0 7.513,3.034 7.601,7.022 0,3.9 -2.951,7.021 -7.691,7.021 z M 76.299,75.339 H 62.707 V 53.598 c 0,-5.463 -1.968,-9.19 -6.887,-9.19 -3.756,0 -5.992,2.513 -6.975,4.94 -0.359,0.868 -0.447,2.081 -0.447,3.296 V 75.339 H 34.804 c 0,0 0.178,-36.826 0,-40.64 h 13.594 v 5.756 c 1.806,-2.769 5.036,-6.709 12.251,-6.709 8.944,0 15.65,5.808 15.65,18.291 z"
+   style="opacity:1;fill:#000000;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:10;stroke-dasharray:none"
+   stroke-linecap="round"
+   id="path2" />
+</g>
+</svg>
