@@ -7,8 +7,8 @@ import type * as Preset from '@docusaurus/preset-classic';
 const isProd = process.env.NODE_ENV === 'production';
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Open Data Hub Documentation',
+  tagline: 'Official Open Data Hub Documentation',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -263,7 +263,8 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+
+      copyright: `Copyright © ${new Date().getFullYear()} Open Data Hub.`,
     },
     prism: {
       theme: prismThemes.github,
