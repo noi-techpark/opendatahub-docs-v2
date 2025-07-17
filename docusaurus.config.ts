@@ -251,17 +251,17 @@ const config: Config = {
             title: 'Services',
             title_URL: 'https://opendatahub.com/services/',
             rows: [
-              { text: 'Data Access', URL: '/services/data-access' },
-              { text: 'Data Sharing', URL: '/services/data-sharing' },
-              { text: 'Data Visualization', URL: '/services/data-visualization' },
-              { text: 'Certification', URL: '/services/certification' },
+              { text: 'Data Access', URL: 'https://opendatahub.com/services/data-access' },
+              { text: 'Data Sharing', URL: 'https://opendatahub.com/services/data-sharing' },
+              { text: 'Data Visualization', URL: 'https://opendatahub.com/services/data-visualization' },
+              { text: 'Certification', URL: 'https://opendatahub.com/services/certification' },
             ],
           },
           {
             title: 'Quickstart',
             title_URL: 'https://opendatahub.com/quickstart/', 
             rows: [
-              { text: 'Datasets', URL: '/datasets' },
+              { text: 'Datasets', URL: 'https://opendatahub.com/datasets' },
               {
                 text: 'Data Browser',
                 URL: 'https://databrowser.opendatahub.com/',
