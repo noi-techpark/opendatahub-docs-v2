@@ -9,3 +9,20 @@
   font-weight: 500;
   text-transform: uppercase;
 }
+
+/* Navbar Content */
+.logoWrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 30px;
+}
+
+.logoImage {
+  max-height: calc(var(--ifm-navbar-height) * 0.75);
+  width: auto;
+}
+
+:global([data-theme='dark']) .logoImage {
+  filter: invert(1);
+  transition: filter 0.3s;
+}

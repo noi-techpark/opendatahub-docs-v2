@@ -104,14 +104,14 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Open Data Hub',
+      title: 'Open Data Hub Docs',
       hideOnScroll: true,
-      logo: {
-        alt: 'Open Data Hub Logo',
-        src: 'img/logo.svg',
-        href: isProd ? 'https://opendatahub.com' : 'https://opendatahub.testingmachine.eu',
-        target: '_self',
-      },
+      // logo: {
+      //   alt: 'Open Data Hub Logo',
+      //   src: 'img/logo.svg',
+      //   href: isProd ? 'https://opendatahub.com' : 'https://opendatahub.testingmachine.eu',
+      //   target: '_self',
+      // },
       items: [
         {
           type: 'docSidebar',
