@@ -21,7 +21,7 @@ export default function ContentWrapper(props: Props): ReactNode {
       <section className={styles.logoWrapper}>
         <a href={logoHref} target="_self" rel="noopener">
           <img
-            src="img/logo.svg"
+            src="/img/logo.svg"
             alt="Open Data Hub Logo"
             className={styles.logoImage}
           />
