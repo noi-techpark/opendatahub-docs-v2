@@ -1,14 +1,14 @@
 import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
-
+require('dotenv').config();
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 const isProd = process.env.NODE_ENV === 'production';
 
 const config: Config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Open Data Hub Documentation',
+  tagline: 'Official Open Data Hub Documentation',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -36,6 +36,10 @@ const config: Config = {
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
+  },
+
+  customFields: {
+    testing: process.env.TESTING === 'true',
   },
 
   presets: [
@@ -100,14 +104,14 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Open Data Hub',
+      title: 'Open Data Hub Docs',
       hideOnScroll: true,
-      logo: {
-        alt: 'Open Data Hub Logo',
-        src: 'img/logo.svg',
-        href: isProd ? 'https://opendatahub.com' : 'https://opendatahub.testingmachine.eu',
-        target: '_self',
-      },
+      // logo: {
+      //   alt: 'Open Data Hub Logo',
+      //   src: 'img/logo.svg',
+      //   href: isProd ? 'https://opendatahub.com' : 'https://opendatahub.testingmachine.eu',
+      //   target: '_self',
+      // },
       items: [
         {
           type: 'docSidebar',
@@ -221,53 +225,110 @@ const config: Config = {
       ],
     },
     footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Tutorial',
-              to: '/',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discordapp.com/invite/docusaurus',
-            },
-            {
-              label: 'X',
-              href: 'https://x.com/docusaurus',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      style: 'light',
+      copyright: '@Open Data Hub | <a class="text-decoration-underline" href="https://noi.bz.it/en/privacy-cookie-policy" target="_blank">Privacy</a>',
+      links: [],
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+    },
+    customFields: {
+      footer: {
+        cards: [
+          {
+            icon: '/img/footer/open-data-hub.svg',
+            alttext: 'Open Data Hub',
+            text: 'Place where data and<br />tech are shared',
+            URL: 'https://opendatahub.com',
+          },
+          {
+            icon: '/img/footer/noi.svg',
+            alttext: 'NOI Techpark',
+            text: 'Innovation hub in<br />Südtirol/ Alto Adige',
+            URL: 'https://noi.bz.it',
+            target_blank: true,
+          },
+        ],
+        columns: [
+          {
+            title: 'Services',
+            title_URL: 'https://opendatahub.com/services/',
+            rows: [
+              { text: 'Data Access', URL: 'https://opendatahub.com/services/data-access' },
+              { text: 'Data Sharing', URL: 'https://opendatahub.com/services/data-sharing' },
+              { text: 'Data Visualization', URL: 'https://opendatahub.com/services/data-visualization' },
+              { text: 'Certification', URL: 'https://opendatahub.com/services/certification' },
+            ],
+          },
+          {
+            title: 'Quickstart',
+            title_URL: 'https://opendatahub.com/quickstart/', 
+            rows: [
+              { text: 'Datasets', URL: 'https://opendatahub.com/datasets' },
+              {
+                text: 'Data Browser',
+                URL: 'https://databrowser.opendatahub.com/',
+                target_blank: true,
+              },
+              {
+                text: 'Analytics Tool',
+                URL: 'https://analytics.opendatahub.com/',
+                target_blank: true,
+              },
+              {
+                text: 'Web Components',
+                URL: 'https://webcomponents.opendatahub.com/',
+                target_blank: true,
+              },
+              {
+                text: 'Access Open Data Hub data from R',
+                URL: 'https://github.com/noi-techpark/it.bz.opendatahub.analytics.libs/tree/main/api/R',
+                target_blank: true,
+              },
+            ],
+          },
+          {
+            title: 'Community',
+            title_URL: 'https://opendatahub.com/community/',
+            rows: [
+              { text: 'Community', URL: 'https://opendatahub.com/community/' },
+              { text: 'Events', URL: 'https://opendatahub.com/events/' },
+            ],
+          },
+          {
+            title: 'Social Media',
+            isSocial: true,
+            rows: [
+              {
+                icon: '/img/footer/github.svg',
+                text: 'GitHub',
+                URL: 'https://github.com/noi-techpark',
+              },
+              {
+                icon: '/img/footer/linkedin.png',
+                text: 'LinkedIn',
+                URL: 'https://www.linkedin.com/company/opendatahub',
+              },
+              {
+                icon: '/img/footer/telegram.svg',
+                text: 'Telegram',
+                URL: 'https://t.me/OpenDataHub',
+              },
+              {
+                icon: '/img/footer/element.svg',
+                text: 'element.io',
+                URL: 'https://app.element.io/#/room/#opendatahub:matrix.org',
+              },
+              {
+                icon: '/img/footer/facebook.svg',
+                text: 'Facebook',
+                URL: 'https://www.facebook.com/opendatahub/',
+              },
+            ],
+          },
+        ],
+      },
     },
   } satisfies Preset.ThemeConfig,  
 };
