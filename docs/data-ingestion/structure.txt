@@ -1,0 +1,12 @@
+- Getting started (docker compose) & useful info
+- Components overview (collector vs transformer)
+- Collector blueprints
+    - api crawler
+    - s3-poller
+    - rest push
+- Transformers blueprints
+    - golang boilerplate
+- Develop a collector from scratch
+- Develop a transformer from scratch
+- SDKs
+    - Golang

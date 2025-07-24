@@ -1,0 +1,8 @@
+{
+  "label": "Data Transformer Blueprints",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "The Open Data Hub leverages a microservices-based architecture to make data processing flexible and scalable. Transformer Blueprints are pre-built, reusable microservices designed to simplify the process of converting raw data into a standardized format. These blueprints offer a \"low-code\" approach, allowing you to configure existing transformers for your specific needs without writing extensive code or managing complex data transformation pipelines."
+  }
+}

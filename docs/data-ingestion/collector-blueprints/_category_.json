@@ -1,0 +1,8 @@
+{
+  "label": "Data Collector Blueprints",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "The Open Data Hub leverages a microservices-based architecture to make data ingestion flexible and scalable. Data Collector Blueprints are pre-built, reusable microservices designed to simplify the process of bringing data into the platform. These blueprints offer a \"low-code\" approach, allowing you to configure existing collectors for your specific needs without writing extensive code or managing complex deployments."
+  }
+}
