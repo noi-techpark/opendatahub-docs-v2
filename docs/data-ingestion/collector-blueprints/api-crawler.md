@@ -16,7 +16,7 @@ This collector is ideal for scenarios where:
 :::info
 Implementation reference:
 
-[https://github.com/noi-techpark/opendatahub-collectors/tree/main/collectors/api-crawler](https://www.google.com/search?q=https://github.com/noi-techpark/opendatahub-collectors/tree/main/collectors/api-crawler)
+[https://github.com/noi-techpark/opendatahub-collectors/tree/main/collectors/api-crawler](https://github.com/noi-techpark/opendatahub-collectors/tree/main/collectors/api-crawler)
 :::
 
 ## Key Features
