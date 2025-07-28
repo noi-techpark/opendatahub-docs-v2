@@ -65,41 +65,4 @@ The `CONFIG_PATH` environment variable points to the `configuration_file.yaml` f
 
 For detailed information on configuring the `configuration_file.yaml`, please refer to the [ApiGorowler package documentation](https://github.com/noi-techpark/go-apigorowler#apigorowler). The documentation covers the schema for `request` and `foreach` steps, authentication methods, `jq` and Go template usage, and context management.
 
-### `configuration_file.yaml` Configuration Example
-
-An example `configuration_file.yaml` could look like this (simplified for illustration):
-
-```yaml
-# configuration_file.yaml
-steps:
-  - name: GetWeatherData
-    request:
-      url: "https://api.example.com/weather?city={{ .city }}"
-      method: GET
-      headers:
-        Authorization: "Bearer {{ .access_token }}"
-      response:
-        jq: '.data[]'
-    foreach:
-      values:
-        - city: "Bolzano"
-        - city: "Merano"
-      steps:
-        - name: ProcessWeatherReading
-          request:
-            url: "https://api.example.com/weather/details?id={{ .id }}"
-            method: GET
-            response:
-              jq: '{ "location": .city, "temperature": .main.temp, "humidity": .main.humidity }'
-            merge:
-              target: parent # Merge the processed data into the parent context (GetWeatherData's context)
-````
-
-In this example, the crawler would:
-
-1.  Iterate over a list of cities (`Bolzano`, `Merano`).
-2.  For each city, make a request to a weather API to get basic weather data.
-3.  Then, for each item returned from the initial weather data (if it's an array and streamed), make another request to get detailed weather information.
-4.  Finally, transform the detailed weather data and merge it back into the main output stream, alongside the original city context.
-
 The `ApiGorowler` [configuration builder IDE](https://github.com/noi-techpark/go-apigorowler/releases) is highly recommended for developing and debugging your `configuration_file.yaml` files, allowing you to execute and inspect the configuration in real-time.
