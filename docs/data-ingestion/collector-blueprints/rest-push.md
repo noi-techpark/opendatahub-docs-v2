@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 # Rest Push Collector
 
-The Inbound REST API collector acts as a generic endpoint where external data providers can **push** their data directly to the Open Data Hub. This means you, as a data provider, don't need to deploy any additional software or agents on your side. Instead, you'll be provided with specific credentials and a URL, and you can simply send your data via standard HTTP POST requests.
+The **Rest Push** collector acts as a generic endpoint where external data providers can **push** their data directly to the Open Data Hub. This means you, as a data provider, don't need to deploy any additional software or agents on your side. Instead, you'll be provided with specific credentials and a URL, and you can simply send your data via standard HTTP POST requests.
 
 This collector is ideal for scenarios where:
 * You have an existing system that can make HTTP requests.
@@ -52,7 +52,7 @@ For the **Production** environment, the base URL for the Inbound REST API collec
 
 For the **Testing** environment, the base URL for the Inbound REST API collector is:
 
-`https://push.api.opendatahub.testingmachine.eu`
+`https://push.api.dev.opendatahub.testingmachine.eu`
 
 </TabItem>
 </Tabs>
