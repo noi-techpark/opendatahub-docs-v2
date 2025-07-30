@@ -69,11 +69,28 @@ See the `collectors` directory in the monorepo: [https://github.com/noi-techpark
 
 There is currently no boilerplate generator for data collectors. You'll need to start from scratch or by copying an existing, up-to-date collector. For simplicity, `s3-poller` is a good starting point.
 
+:::info
+An in depth guide to develop a Data Collector from scratch is available [here](data-collector-from-scratch.mdx)
+:::
+
+:::info
+We also provide low-code Data Collector Blueprints! check out our [catalog](category/data-collector-blueprints)
+:::
+
+
 ### 3.2. Transformers
 
 See the `transformers` directory in the monorepo: [https://github.com/noi-techpark/opendatahub-collectors/tree/main/transformers](https://github.com/noi-techpark/opendatahub-collectors/tree/main/transformers).
 
 For transformers, a boilerplate generator is available at `/transformers/boilerplate/setup_go.sh`. This script generates a minimal transformer service that you can extend. The wizard will ask for a two-part provider tuple and Origin, which need to match the tuple provided in the collectors.
+
+:::info
+An in depth guide to develop a Data Transformer from scratch is available [here](data-transformer-from-scratch.mdx)
+:::
+
+:::info
+We also provide low-code Data Transformer Blueprints! check out our [catalog](category/data-transformer-blueprints)
+:::
 
 #### Example: Using the Transformer Boilerplate (Conceptual)
 
