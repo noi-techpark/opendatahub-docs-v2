@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 NOI Techpark <digital@noi.bz.it>
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import React, {type ReactNode} from 'react';
 import Navbar from '@theme-original/Navbar';
 import type NavbarType from '@theme/Navbar';
