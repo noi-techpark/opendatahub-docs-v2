@@ -1,0 +1,10 @@
+# SPDX-FileCopyrightText: NOI Techpark <digital@noi.bz.it>
+#
+# SPDX-License-Identifier: CC0-1.0
+
+version = 1
+
+[[annotations]]
+path = ["**/.env.example", "**/.mdx", "**/*.json", "**/.gitattributes", "**/.gitignore", "**/.svg", "**/.png", "**/.tf", "**/.terraform.lock.hcl", "**/.conf", "**/.yml", "**/.yaml", "**/.md", "**/.sh", "**/.jpeg", "**/.txt", "**/.otf", "**/.jpg", "**/.ico", "**/.config.ts"]
+SPDX-FileCopyrightText = "(c) NOI Techpark <digital@noi.bz.it>"
+SPDX-License-Identifier = "CC0-1.0"

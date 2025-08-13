@@ -1,3 +1,5 @@
+[![REUSE Compliance](https://github.com/noi-techpark/opendatahub-docs-v2/actions/workflows/reuse-lint.yml/badge.svg)](https://github.com/noi-techpark/opendatahub-docs/wiki/REUSE#badges)
+
 # Website
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
