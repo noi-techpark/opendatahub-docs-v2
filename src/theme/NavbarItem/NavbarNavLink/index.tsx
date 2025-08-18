@@ -124,7 +124,6 @@ export default function NavbarNavLink({
   const normalizedHref = useBaseUrl(href, { forcePrependBaseUrl: true });
   const isExternalLink = label && href && !isInternalUrl(href);
   const isDropdownLink = activeClassName === dropdownLinkActiveClass;
-  console.log(icon)
   const IconComponent = getIconComponent(icon);
 
   return (

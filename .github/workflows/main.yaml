@@ -35,6 +35,9 @@ jobs:
         run: npm ci --legacy-peer-deps
   
       - name: Build Docusaurus site
+        env:
+          NODE_ENV: test
+          TESTING: true
         run: npm run build
 
       - name: Sync to S3 bucket
