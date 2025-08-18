@@ -104,87 +104,8 @@ The project structure will be very similar to a data collector, with the additio
 
 ### 3.2. Environment Variables and Configuration Management
 
-Configuration is externalized via environment variables, ensuring flexibility across different environments.
-
-<Tabs>
-<TabItem value="go" label="Go Code (main.go)">
-
-```go
-// ... imports ...
-
-var env tr.Env // Embeds common environment variables from the Transformer SDK
-var station_proto Stations // Global variable to hold loaded station metadata
-
-func main() {
-    // 1. Initialize SDK components (messaging, logging, telemetry)
-    ms.InitWithEnv(context.Background(), "", &env)
-    slog.Info("Starting data transformer...")
-
-    // Ensure telemetry traces are flushed on application panic
-    defer tel.FlushOnPanic()
-
-    // 2. Initialize BDP client using environment variables for authentication and endpoint
-    b := bdplib.FromEnv()
-
-    // 3. Load static station metadata from CSV
-    station_proto = ReadStations("../resources/stations.csv")
-
-    // 4. Synchronize Data Types with BDP
-    SyncDataTypes(b)
-
-    slog.Info("listening")
-    // 5. Initialize the transformer listener.
-    // It will consume messages from the configured MQ_QUEUE.
-    listener := tr.NewTr[FacilityData](context.Background(), env)
-
-    // 6. Start the transformer, passing the `TransformWithBdp` function as the handler.
-    // This handler will be called for each message consumed from the queue.
-    err := listener.Start(context.Background(), TransformWithBdp(b))
-
-    ms.FailOnError(context.Background(), err, "error while listening to queue")
-}
-````
-
-</TabItem>
-<TabItem value="env" label=".env file">
-
-```ini
-# Common SDK environment variables for a transformer
-LOG_LEVEL="DEBUG"
-MQ_QUEUE=s3-poller.parking-offstreet-skidata  # Specific queue to consume from
-MQ_EXCHANGE=routed
-MQ_KEY=s3-poller.parking-offstreet-skidata # Routing key for messages
-MQ_CLIENT=tr-parking-offstreet-skidata # Identify your transformer to RabbitMQ
-MQ_URI=amqp://username:password@localhost:5672 # RabbitMQ connection URI
-
-# Raw Data Bridge Endpoint (if used to fetch raw data after notification)
-RAW_DATA_BRIDGE_ENDPOINT="http://localhost:2000/" # Example: URL for a service fetching raw data
-
-# BDP Client specific environment variables (for connecting to Timeseries Writer)
-BDP_BASE_URL=https://share.opendatahub.testingmachine.eu # Base URL of the Timeseries Writer API
-BDP_PROVENANCE_VERSION=0.1.0 # Version of this transformer for provenance
-BDP_PROVENANCE_NAME=tr-parking-offstreet-skidata # Name of this transformer for provenance
-BDP_ORIGIN=province-bolzano # Origin of the data being transformed
-
-# OAuth2 / Keycloak credentials for BDP authentication
-ODH_TOKEN_URL=https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token
-ODH_CLIENT_SECRET=ODH_CLIENT_ID=odh-mobility-datacollector-development # OAuth Client ID
-ODH_CLIENT_SECRET=7bd46f8f-c296-416d-a13d-dc81e68d0830 # OAuth Client Secret
-```
-
-</TabItem>
-</Tabs>
-
-**Critical Points:**
-
-  * **`tr.Env` Embedding**: Similar to `dc.Env` for collectors, `tr.Env` from the transformer SDK handles common environment variables related to message queuing for transformers (like `MQ_QUEUE`, `MQ_KEY`).
-  * **`bdplib.FromEnv()`**: This function from the `go-bdp-client` simplifies the initialization of the BDP client. It automatically reads environment variables prefixed with `BDP_` and `ODH_` to configure the base URL, provenance details, and OAuth2 authentication (token URL, client ID/secret). This centralizes authentication logic.
-  * **Message Queue Configuration**:
-      * `MQ_QUEUE`: Specifies the *queue* this transformer will consume messages from. This queue should be populated by the data collector.
-      * `MQ_EXCHANGE` / `MQ_KEY`: Define the RabbitMQ exchange and routing key if the message flow involves complex routing.
-  * **`RAW_DATA_BRIDGE_ENDPOINT`**: This variable indicates a pattern where the raw data itself is not placed in the RabbitMQ message payload. Instead, the message might contain a pointer to the raw data, which the transformer then fetches via a "Raw Data Bridge" service.
-  * **BDP Provenance**: `BDP_PROVENANCE_VERSION`, `BDP_PROVENANCE_NAME`, `BDP_ORIGIN` are crucial for data lineage within the Open Data Hub. Every piece of data pushed by this transformer will carry this provenance information.
-  * **OAuth2 Authentication**: `ODH_TOKEN_URL`, `ODH_CLIENT_ID`, `ODH_CLIENT_SECRET` are used by `bdplib.FromEnv()` to configure the OAuth2 client credentials flow, ensuring authenticated access to the Timeseries Writer.
+By design we require all configuration to be done via `env variables`.  
+This simplifies the develop cycle and deployment allowing us to use **.env** files for testing and **Helm values.yaml** for deployment.
 
 ### 3.3. Authentication for the Timeseries Writer
 
@@ -320,11 +241,73 @@ func TransformWithBdp(bdp bdplib.Bdp) tr.Handler[Forecast] {
 **Key SDK Integration Points:**
 
   * **`ms.InitWithEnv`**: (Already discussed for collectors) Initializes common services like logging, messaging consumer, and telemetry based on `tr.Env`.
+  * **`bdplib.FromEnv()`**: This function from the `go-bdp-client` simplifies the initialization of the BDP client. It automatically reads environment variables prefixed with `BDP_` and `ODH_` to configure the base URL, provenance details, and OAuth2 authentication (token URL, client ID/secret). This centralizes authentication logic.
   * **`tel.FlushOnPanic()`**: Essential for ensuring traces are sent before a crash.
   * **`tr.NewTr[Forecast](ctx, env)`**: Creates a new transformer listener instance. The `[Forecast]` type parameter specifies the expected Go struct that the raw data (received as `rdb.Raw[Forecast]`) will be unmarshaled into. The SDK handles unmarshalling the raw `[]byte` into this Go struct for you.
   * **`listener.Start(ctx, TransformWithBdp(b))`**: This is the main loop of the transformer. It starts consuming messages from the configured queue. For each message, it calls the `TransformWithBdp` handler function.
   * **`TransformWithBdp(bdp bdplib.Bdp) tr.Handler[Forecast]`**: This is an adapter function. The `tr.Handler` interface expects a function with a specific signature (`func(ctx context.Context, payload *rdb.Raw[T]) error`). `TransformWithBdp` creates such a function, injecting the initialized `bdplib.Bdp` client so that the actual `Transform` logic can use it to push data.
   * **`rdb.Raw[Forecast]`**: The incoming payload from the message queue is unmarshaled by the SDK into this generic `Raw` struct, where `Rawdata` contains your specific `Forecast` struct.
+
+:::warning
+
+When constructing the `Tr`, the type (in this case **Forecast**) passed to the parametrized constructor is used to deserialize the **RawData** directly.
+
+```go
+listener := tr.NewTr[Forecast](context.Background(), env)
+```
+
+In the above example, the SDK tries to deserialize the data retrieved from the **RawDataTable** into `Forecast` objects.  
+
+If the data is stored as serialized string in the `RawDataTable`, use-case very common in our existing collectors, we need to create the `Tr` passing **string** as type to properly retrieve the data without incurring in an error.  
+The SDK provides a **middleware function** which take care in deserialize the string and changing the `handler signatire`:
+
+```go
+listener := tr.NewTr[string](context.Background(), env)
+err := listener.Start(context.Background(), 
+    tr.RawString2JsonMiddleware[Forecast](TransformWithBdp(b))
+)
+
+
+func TransformWithBdp(bdp bdplib.Bdp) tr.Handler[Forecast] {
+    return func(ctx context.Context, payload *rdb.Raw[Forecast]) error {
+        return Transform(ctx, bdp, payload)
+    }
+}
+```
+:::
+
+#### SDK Env Variables
+When using the official SDK, there are some special env variables used to configure various aspects of the transformer
+
+| Variable | Description | Allowed Values | Default |
+| :--- | :--- | :--- | :--- |
+| `PROVIDER` | String identifying the data provider | [path1]/[path2]/... | (No default set) |
+| `MQ_URI` | Connection URI to connect to RabbitMQ | - | (No default set) |
+| `MQ_CLIENT` | Client name to identify the connection in RabbitMQ | - | (No default set) |
+| `MQ_EXCHANGE` | The exchange notifiyng the new data | - | `routed` |
+| `MQ_QUEUE` | RabbitMQ queue this transfromer pulls messages from | - | (No default set) |
+| `MQ_KEY` | Routing key used to route message from `MQ_EXCHANGE` to `MQ_QUEUE` | path1.path2... # | (No default set) |
+| `RAW_DATA_BRIDGE_ENDPOINT` | Endpoint ot the Raw Data Bridge, which retrieves Raw Data | - | (No default set) |
+| `LOG_LEVEL` | Sets the logging severity level. | `DEBUG`, `INFO`, `WARN`, `ERROR` | `INFO` |
+| `SERVICE_NAME` | The name of the service. | - | `gotel` |
+| `SERVICE_VERSION` | The version of the service. | - | `0.0.1` |
+| `TELEMETRY_ENABLED` | Enables or disables telemetry. | `true`, `false` | `true` |
+| `TELEMETRY_TRACE_ENABLED` | Enables or disables trace telemetry. | `true`, `false` | `true` |
+| `TELEMETRY_TRACE_BATCH_SIZE` | The maximum number of traces to be batched. | - | `10` |
+| `TELEMETRY_TRACE_BATCH_TIMEOUT_SEC` | The timeout for a trace batch in seconds. | - | `5` |
+| `TELEMETRY_TRACE_GRPC_ENDPOINT` | The gRPC endpoint for trace export. | - | `localhost:4317` |
+| `TELEMETRY_TRACE_TLS_ENABLED` | Enables or disables TLS for trace export. | `true`, `false` | `false` |
+| `TELEMETRY_TRACE_TLS_CERT` | Path to the TLS certificate file for trace export. | - | `""` |
+| `TELEMETRY_METRICS_ENABLED` | Enables or disables metrics telemetry. | `true`, `false` | `false` |
+| `TELEMETRY_METRICS_TIMEOUT_SEC` | The timeout for metrics export in seconds. | - | `30` |
+| `TELEMETRY_METRICS_INTERVAL_SEC` | The interval between metrics exports in seconds. | - | `60` |
+| `TELEMETRY_METRICS_GRPC_ENDPOINT` | The gRPC endpoint for metrics export. | - | `localhost:4317` |
+| `TELEMETRY_METRICS_TLS_ENABLED` | Enables or disables TLS for metrics export. | `true`, `false` | `false` |
+| `TELEMETRY_METRICS_TLS_CERT` | Path to the TLS certificate file for metrics export. | - | `""` |
+| `TELEMETRY_METRICS_EXPORT_MODE` | The export mode for metrics. | `otlp`, `prometheus` (implied by context) | `otlp` |
+| `TELEMETRY_METRICS_EXPORT_PORT` | The port for the metrics exporter. | - | `2112` |
+
+
 
 ### 3.5. Transform function
 
@@ -335,7 +318,7 @@ Each transformer implements its own logic, the below is only an example
 :::
 
 <Tabs>
-<TabItem value="go" label="Go Code (main.go) - `Transform` Function">
+<TabItem value="go" label="Go Code (main.go) - Transform Function">
 
 ```go
 // ... constants and helper structs ...

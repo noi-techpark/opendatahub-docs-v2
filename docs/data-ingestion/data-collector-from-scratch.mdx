@@ -98,91 +98,8 @@ A typical Go project for a data collector might look like this:
 
 ### 3.2. Environment Variables and Configuration Management
 
-The `env` struct and the `.env` file demonstrate how environment variables are loaded and managed.
-
-<Tabs>
-<TabItem value="go" label="Go Code (main.go)">
-
-```go
-// ... imports ...
-
-var env struct {
-    dc.Env // Embeds common environment variables from the SDK (MQ_URI, LOGLEVEL, etc.)
-    CRON       string `env:"CRON"` // Specific cron schedule for this collector
-    RAW_BINARY bool   `env:"RAW_BINARY"` // Flag to interpret raw data as binary
-
-    AWS_REGION            string `env:"AWS_REGION"`
-    AWS_S3_FILE_NAME      string `env:"AWS_S3_FILE_NAME"`
-    AWS_S3_BUCKET_NAME    string `env:"AWS_S3_BUCKET_NAME"`
-    AWS_ACCESS_KEY_ID     string `env:"AWS_ACCESS_KEY_ID"`
-    AWS_ACCESS_SECRET_KEY string `env:"AWS_ACCESS_SECRET_KEY"`
-}
-
-func main() {
-    // Initializes messaging, logging, and telemetry based on env vars
-    ms.InitWithEnv(context.Background(), "", &env)
-    slog.Info("Starting data collector...")
-
-    // ... rest of the main function ...
-}
-````
-
-</TabItem>
-<TabItem value="env" label=".env file">
-
-```ini
-# Common SDK environment variables
-MQ_URI=amqp://guest:guest@rabbitmq
-MQ_CLIENT=dc-meteorology-bz-forecast # Identify your data collector to RabbitMQ
-MQ_EXCHANGE=ingress # Defaults to ingress
-LOGLEVEL=DEBUG
-PROVIDER=s3-poller/meteorology-bz-forecast # Unique identifier for this data source
-
-# Collector-specific environment variables
-CRON="0/10 * * * * *" # Cron polling schedule, starting with seconds (e.g., every 10 seconds)
-
-AWS_REGION=eu-west-1
-AWS_S3_FILE_NAME=SMOS_MCPL-WX_EXP_SIAG.JSON
-AWS_S3_BUCKET_NAME=dc-meteorology-province-forecast
-AWS_ACCESS_KEY_ID=
-AWS_ACCESS_SECRET_KEY=
-
-# interpret response as binary and store as base64. defaults to false
-RAW_BINARY=false
-```
-
-</TabItem>
-<TabItem value="helm" label="Helm Chart (.test.yaml)">
-
-```yaml
-# ...
-env:
-  MQ_CLIENT: dc-meteorology-bz-forecast
-  PROVIDER: s3-poller/meteorology-bz-forecast
-
-  CRON: "0 0 0/1 * * *" # Overrides local CRON for production (hourly)
-
-  AWS_REGION: "eu-west-1"
-  AWS_S3_FILE_NAME: "SMOS_MCPL-WX_EXP_SIAG.JSON"
-  AWS_S3_BUCKET_NAME: dc-meteorology-province-forecast
-
-  SERVICE_NAME: dc-meteorology-bz-forecast
-  TELEMETRY_TRACE_GRPC_ENDPOINT: tempo-distributor-discovery.monitoring.svc.cluster.local:4317 # Telemetry endpoint
-
-envSecretRef: # Reference secrets for sensitive information
-  - name: MQ_URI
-    secret: rabbitmq-svcbind
-    key: uri
-```
-
-</TabItem>
-</Tabs>
-
-**Critical Points:**
-
-  * **`dc.Env` Embedding**: The `dc.Env` struct from the SDK automatically handles common environment variables like `MQ_URI`, `LOGLEVEL`, `PROVIDER`, etc. By embedding it, your custom `env` struct inherits these fields, and `ms.InitWithEnv` can populate them.
-  * **Separation of Concerns**: `.env` is for local development, and Helm values (`.test.yaml`) are for deployment-specific configurations, including referencing Kubernetes secrets (`envSecretRef`) for sensitive data like `MQ_URI`.
-  * **`ms.InitWithEnv`**: This is a crucial SDK function that reads the environment variables, initializes the structured logger (`slog`), sets up the messaging client (RabbitMQ), and configures telemetry. It's the entry point for the SDK's core functionalities.
+By design we require all configuration to be done via `env variables`.  
+This simplifies the develop cycle and deployment allowing us to use **.env** files for testing and **Helm values.yaml** for deployment.
 
 ### 3.3. SDK Integration (`opendatahub-go-sdk`)
 
@@ -268,6 +185,34 @@ func main() {
       * The SDK then takes this `RawAny` object and publishes it to the configured message queue.
   * **`rdb.RawAny`**: This struct defines the standard format for raw data that the SDK expects. It includes `Provider` (a unique identifier for the data source), `Timestamp` (when the data was collected), and `Rawdata` (the actual fetched content).
   * **`ms.FailOnError(ctx, err, msg)`**: A utility function from the SDK that logs a fatal error and exits the application if `err` is not `nil`. This is used for unrecoverable errors during setup or the main loop.
+
+#### SDK Env Variables
+When using the official SDK, there are some special env variables used to configure various aspects of the collector
+
+| Variable | Description | Allowed Values | Default |
+| :--- | :--- | :--- | :--- |
+| `PROVIDER` | String identifying the data provider | [path1]/[path2]/... | (No default set) |
+| `MQ_URI` | Connection URI to connect to RabbitMQ | - | (No default set) |
+| `MQ_EXCHANGE` | Exchange name where to push messages | - | `ingress` |
+| `MQ_CLIENT` | Client name to identify the connection in RabbitMQ | - | (No default set) |
+| `LOG_LEVEL` | Sets the logging severity level. | `DEBUG`, `INFO`, `WARN`, `ERROR` | `INFO` |
+| `SERVICE_NAME` | The name of the service. | - | `gotel` |
+| `SERVICE_VERSION` | The version of the service. | - | `0.0.1` |
+| `TELEMETRY_ENABLED` | Enables or disables telemetry. | `true`, `false` | `true` |
+| `TELEMETRY_TRACE_ENABLED` | Enables or disables trace telemetry. | `true`, `false` | `true` |
+| `TELEMETRY_TRACE_BATCH_SIZE` | The maximum number of traces to be batched. | - | `10` |
+| `TELEMETRY_TRACE_BATCH_TIMEOUT_SEC` | The timeout for a trace batch in seconds. | - | `5` |
+| `TELEMETRY_TRACE_GRPC_ENDPOINT` | The gRPC endpoint for trace export. | - | `localhost:4317` |
+| `TELEMETRY_TRACE_TLS_ENABLED` | Enables or disables TLS for trace export. | `true`, `false` | `false` |
+| `TELEMETRY_TRACE_TLS_CERT` | Path to the TLS certificate file for trace export. | - | `""` |
+| `TELEMETRY_METRICS_ENABLED` | Enables or disables metrics telemetry. | `true`, `false` | `false` |
+| `TELEMETRY_METRICS_TIMEOUT_SEC` | The timeout for metrics export in seconds. | - | `30` |
+| `TELEMETRY_METRICS_INTERVAL_SEC` | The interval between metrics exports in seconds. | - | `60` |
+| `TELEMETRY_METRICS_GRPC_ENDPOINT` | The gRPC endpoint for metrics export. | - | `localhost:4317` |
+| `TELEMETRY_METRICS_TLS_ENABLED` | Enables or disables TLS for metrics export. | `true`, `false` | `false` |
+| `TELEMETRY_METRICS_TLS_CERT` | Path to the TLS certificate file for metrics export. | - | `""` |
+| `TELEMETRY_METRICS_EXPORT_MODE` | The export mode for metrics. | `otlp`, `prometheus` (implied by context) | `otlp` |
+| `TELEMETRY_METRICS_EXPORT_PORT` | The port for the metrics exporter. | - | `2112` |
 
 ### 3.4. Data Collection Logic (S3 Interaction)
 
