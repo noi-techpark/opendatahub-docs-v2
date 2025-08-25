@@ -353,39 +353,71 @@ CMD ["go", "test", "."] # Run Go tests
 #
 # SPDX-License-Identifier: CC0-1.0
 
-services:
-  app: # Your data collector service
-    depends_on:
-      rabbitmq: # Ensure rabbitmq is healthy before starting the app
-        condition: service_healthy
-    build:
-      dockerfile: infrastructure/docker/Dockerfile # Path to your Dockerfile
-      context: . # Build context is the current directory
-      target: dev # Use the 'dev' stage from the Dockerfile
-    env_file:
-      - .env # Load environment variables from the .env file
-    volumes:
-      - ./src:/code # Mount your source code for hot-reloading in dev mode
-      - pkg:/go/pkg/mod # Cache Go modules for faster builds
-    working_dir: /code # Set the working directory inside the container
+x-app-common:
+  &app-common
+  build:
+    dockerfile: infrastructure/docker/Dockerfile
+    context: . 
+    target: dev
+  env_file:
+    - .env
+  volumes:
+    - ./src:/code
+    - ./infrastructure:/code/infrastructure
+    - pkg:/go/pkg/mod
+  working_dir: /code
 
-  rabbitmq: # RabbitMQ service (dependency)
-    extends: # Reuse a common RabbitMQ definition
+services:
+
+  app-bdp:
+    <<: *app-common
+    profiles:
+      - bdp
+    networks:
+      - ingestion
+  
+  app:
+    <<: *app-common
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    profiles:
+      - dev
+
+  rabbitmq:
+    extends:
       file: ../lib/docker-compose/docker-compose.rabbitmq.yml
       service: rabbitmq
-    attach: false # Do not attach to RabbitMQ's logs by default (can be noisy)
+    attach: false
+
+    profiles:
+      - dev
+
 volumes:
-  pkg: # Define the named volume for Go module caching
+  pkg:
+
+networks:
+  ingestion:
+    external: true
+
 ```
 
 </TabItem>
 </Tabs>
 
 :::warning
+When developing you must careful to start the collector with `rabbitmq` service
+
+```
+docker compose up --dev bdp
+```
+:::
+
+:::warning
 When testing the complete pipeline (comprehensive of the transformer) you need to start the full Open Data Hub Core and you must careful to start the collector without `rabbitmq` service
 
 ```
-docker compose up app
+docker compose up --profile bdp
 ```
 :::
 
@@ -452,9 +484,8 @@ To get your S3 poller data collector running locally:
 5.  **Start Collector**: From your collector's directory (`opendatahub-collectors/collectors/s3-poller`), run its `docker-compose.yml`:
     ```bash
     cd opendatahub-collectors/collectors/s3-poller # Adjust path if needed
-    docker compose up app --build # Build and run your collector
+    docker compose up --profile bdp --build # Build and run your collector
     ```
-    The `app` service in your collector's `docker-compose.yml` will wait for `rabbitmq` to be healthy before starting.
 
 ### Testing the Data Flow
 

@@ -561,41 +561,71 @@ The `docker-compose.yml` for a transformer will be almost identical to a collect
 #
 # SPDX-License-Identifier: CC0-1.0
 
+x-app-common:
+  &app-common
+  build:
+    dockerfile: infrastructure/docker/Dockerfile
+    context: . 
+    target: dev
+  env_file:
+    - .env
+  volumes:
+    - ./src:/code
+    - ./infrastructure:/code/infrastructure
+    - pkg:/go/pkg/mod
+  working_dir: /code
+
 services:
-  app: # Your data transformer service
+
+  app-bdp:
+    <<: *app-common
+    profiles:
+      - bdp
+    networks:
+      - ingestion
+  
+  app:
+    <<: *app-common
     depends_on:
       rabbitmq:
         condition: service_healthy
-    build:
-      dockerfile: infrastructure/docker/Dockerfile # Or wherever your Dockerfile is
-      context: .
-      target: dev
-    env_file:
-      - .env # Load environment variables, including MQ_URI, BDP_*, ODH_*
-    volumes:
-      - ./src:/code
-      - ./resources:/code/resources # Mount resources for development (optional if copied in Dockerfile)
-      - pkg:/go/pkg/mod
-    working_dir: /code
+    profiles:
+      - dev
 
   rabbitmq:
     extends:
       file: ../lib/docker-compose/docker-compose.rabbitmq.yml
       service: rabbitmq
     attach: false
+
+    profiles:
+      - dev
+
 volumes:
   pkg:
+
+networks:
+  ingestion:
+    external: true
+
 ```
 
 </TabItem>
 </Tabs>
 
-
 :::warning
-When testing the complete pipeline (comprehensive of the transformer) you need to start the full Open Data Hub Core and you must careful to start the collector without `rabbitmq` service
+When developing you must careful to start the transformer with `rabbitmq` service
 
 ```
-docker compose up app
+docker compose up --dev bdp
+```
+:::
+
+:::warning
+When testing the complete pipeline (comprehensive of the collector) you need to start the full Open Data Hub Core and you must careful to start the transformer without `rabbitmq` service
+
+```
+docker compose up --profile bdp
 ```
 :::
 
@@ -821,3 +851,32 @@ func TestStations(t *testing.T) {
   * **Separation of Concerns in Tests**:
       * `TestSkidata`, `TestMyBestParking`: Focus on the end-to-end transformation from raw input to BDP calls.
       * `TestStations`: Dedicated to testing the static data loading and `ToMetadata` conversion logic in `station.go`, isolating that component.
+
+## 8\. Local Development Workflow
+
+To get your transformer running locally:
+
+1.  **Clone Repositories**:
+      * `opendatahub-collectors` (contains your collector's source)
+      * `infrastructure-v2` (contains the shared `docker-compose.rabbitmq.yml` and overall infrastructure compose files)
+2.  **Navigate to Transformer Directory**: `cd opendatahub-collectors/transformers/foo-bar` (or your specific transformer's path).
+3.  **Create `.env`**: Copy the provided `.env` content into a file named `.env` in this directory. Fill in your AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_ACCESS_SECRET_KEY`).
+4.  **Start Infrastructure**: From the `infrastructure-v2` directory, run the base and timeseries compose files:
+    ```bash
+    cd ../../infrastructure-v2 # Adjust path if needed
+    docker compose -f docker-compose.yml up -d # Run in detached mode
+    docker compose -f docker-compose.timeseries.yml up -d
+    ```
+5.  **Start Transformer**: From your transformer's directory (`opendatahub-collectors/transformer/foo-bar`), run its `docker-compose.yml`:
+    ```bash
+    cd opendatahub-collectors/transformers/foo-bar # Adjust path if needed
+    docker compose up --profile bdp --build # Build and run your transformer
+    ```
+
+### Testing the Data Flow
+
+  * **Check Transformer Logs**: Observe the logs of your `app` container.
+  * **RabbitMQ Management**: Access `http://localhost:15672` (guest/guest) in your browser. Navigate to "Queues" and check the `ingress` queue (or whatever `MQ_EXCHANGE` you configured). You should see messages accumulating there.
+  * **MongoDB**: Connect to `mongodb://localhost:27017/?directConnection=true` using a tool like MongoDB Compass. You can inspect the raw data stored by the SDK before it's picked up by a transformer.
+
+This setup allows you to develop and test your data transformer in an environment that closely mirrors the production Kubernetes cluster, ensuring smooth integration with the Open Data Hub ecosystem.
