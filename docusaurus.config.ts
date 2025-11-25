@@ -20,7 +20,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'http://localhost:3000',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -50,23 +50,13 @@ const config: Config = {
       'classic',
       {
         docs: false,
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-          // Useful options to enforce blogging best practices
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
+        },
+        sitemap: {
+          changefreq: 'weekly',
+          filename: 'sitemap.xml',
         },
       } satisfies Preset.Options,
     ],
@@ -76,6 +66,7 @@ const config: Config = {
     [
       '@docusaurus/plugin-content-docs',
       {
+        id: 'general',
         path: 'docs/tutorial',
         routeBasePath: '/',
         sidebarPath: require.resolve('./sidebarsGeneral.ts'),
@@ -103,6 +94,8 @@ const config: Config = {
     ],
   ],
 
+  themes: ['docusaurus-theme-search-typesense'],
+
   themeConfig: {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
@@ -119,6 +112,7 @@ const config: Config = {
         {
           type: 'docSidebar',
           sidebarId: 'generalSidebar',
+          docsPluginId: 'general',
           position: 'left',
           label: 'Tutorial',
         },
@@ -239,6 +233,23 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+    },
+    typesense: {
+      typesenseCollectionName: process.env.TYPESENSE_COLLECTION!,
+      typesenseServerConfig: {
+        nodes: [
+          {
+            host: process.env.TYPESENSE_HOST!,
+            port: Number(process.env.TYPESENSE_PORT!),
+            protocol: process.env.TYPESENSE_PROTOCOL! as 'http' | 'https',
+          },
+        ],
+        apiKey: process.env.TYPESENSE_SEARCH_ONLY_API_KEY!,
+      },
+      typesenseSearchParameters: {
+        query_by: 'content,hierarchy.lvl0,hierarchy.lvl1,hierarchy.lvl2,hierarchy.lvl3,hierarchy.lvl4,hierarchy.lvl5,hierarchy.lvl6',
+      },
+      contextualSearch: true,
     },
     customFields: {
       footer: {

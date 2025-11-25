@@ -3,6 +3,7 @@
 
 # Production
 /build
+/typesense/typesense-data
 
 # Generated files
 .docusaurus
