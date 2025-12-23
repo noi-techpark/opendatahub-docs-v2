@@ -10,6 +10,9 @@ on:
         options:
           - test
           - prod
+  push:
+    branches:
+      - typesense
 
 env:
   PROJECT_NAME: odh-docs-typesense
@@ -17,13 +20,13 @@ env:
 jobs:
   deploy-typesense:
     runs-on: ubuntu-22.04
-    concurrency: deploy-typesense-${{ github.event.inputs.environment }}
+    concurrency: deploy-typesense-${{ github.event.inputs.environment || 'test' }}
     steps:
       - name: Checkout source code
         uses: actions/checkout@v2
 
       - name: Create .env file (test)
-        if: ${{ github.event.inputs.environment == 'test' }}
+        if: ${{ github.event.inputs.environment == 'test' || github.event_name == 'push' }}
         uses: noi-techpark/github-actions/env-file@v2
         env:
           X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
@@ -43,7 +46,7 @@ jobs:
       - name: Deploy application
         uses: noi-techpark/github-actions/docker-deploy@v2
         with:
-          hosts: ${{ github.event.inputs.environment }}
+          hosts: ${{ github.event.inputs.environment || 'test' }}
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           docker-username: 'noi-techpark-bot'
           docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
