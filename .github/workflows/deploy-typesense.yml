@@ -10,9 +10,9 @@ on:
         options:
           - test
           - prod
-  push:
-    branches:
-      - typesense
+  # push:
+  #   branches:
+  #     - typesense
 
 env:
   PROJECT_NAME: odh-docs-typesense
