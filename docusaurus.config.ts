@@ -12,7 +12,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Prevent search engines from indexing the site when TESTING environment variable is set
-  noIndex: process.env.TESTING === 'true',
+  // noIndex: process.env.TESTING === 'true',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
