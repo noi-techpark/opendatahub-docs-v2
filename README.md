@@ -56,10 +56,14 @@ npx docs-to-pdf docusaurus --initialDocURLs="[url_of_page_you_want_scrape_from]"
 
 | Secret | Description |
 | :--- | :--- |
-| `TYPESENSE_API_KEY_TEST/PROD` | Admin API key for Typesense |
-| `TYPESENSE_HOST_TEST/PROD` | Typesense server hostname (DNS name, no protocol/port) |
+| `TYPESENSE_API_KEY_TEST/PROD` | Admin API key for Typesense (scraper) |
+| `TYPESENSE_SEARCH_ONLY_API_KEY_TEST/PROD` | Search-only API key (frontend) |
 | `SSH_PRIVATE_KEY` | SSH key for deployment |
 | `GH_PERSONAL_ACCESS_TOKEN` | GitHub token for Docker registry |
+| `AWS_S3_ACCESS_KEY_ID` | AWS S3 access key |
+| `AWS_S3_SECRET_ACCESS_KEY` | AWS S3 secret key |
+
+Note: Typesense hosts are configured as env variables in the workflow files.
 
 ### Deployment Flow
 

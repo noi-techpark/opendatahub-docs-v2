@@ -1,0 +1,74 @@
+name: Index Documentation
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - test
+          - prod
+  push:
+    tags:
+      - 'v*'
+      - 'rc*'
+
+env:
+  TYPESENSE_HOST_TEST: "typesense.docs.testingmachine.eu"
+  TYPESENSE_HOST_PROD: "search.opendatahub.com"    # TODO: update
+
+jobs:
+  index:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Determine environment from tag
+        id: env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" == refs/tags/rc* ]]; then
+            echo "environment=test" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update scraper config and run (test)
+        if: steps.env.outputs.environment == 'test'
+        env:
+          DOCS_URL: "https://docs.opendatahub.testingmachine.eu"
+          DOCS_DOMAIN: "docs.opendatahub.testingmachine.eu"
+        run: |
+          jq --arg url "$DOCS_URL" --arg domain "$DOCS_DOMAIN" \
+            '.start_urls = [$url + "/"] | .sitemap_urls = [$url + "/sitemap.xml"] | .allowed_domains = [$domain]' \
+            typesense/scraper.json > typesense/scraper.run.json
+
+          docker run \
+            -e CONFIG="$(cat typesense/scraper.run.json | jq -r tostring)" \
+            -e TYPESENSE_API_KEY="${{ secrets.TYPESENSE_API_KEY_TEST }}" \
+            -e TYPESENSE_HOST="${{ env.TYPESENSE_HOST_TEST }}" \
+            -e TYPESENSE_PORT="443" \
+            -e TYPESENSE_PROTOCOL="https" \
+            typesense/docsearch-scraper:0.11.0
+
+      - name: Update scraper config and run (prod)
+        if: steps.env.outputs.environment == 'prod'
+        env:
+          DOCS_URL: "https://docs.opendatahub.com"
+          DOCS_DOMAIN: "docs.opendatahub.com"
+        run: |
+          jq --arg url "$DOCS_URL" --arg domain "$DOCS_DOMAIN" \
+            '.start_urls = [$url + "/"] | .sitemap_urls = [$url + "/sitemap.xml"] | .allowed_domains = [$domain]' \
+            typesense/scraper.json > typesense/scraper.run.json
+
+          docker run \
+            -e CONFIG="$(cat typesense/scraper.run.json | jq -r tostring)" \
+            -e TYPESENSE_API_KEY="${{ secrets.TYPESENSE_API_KEY_PROD }}" \
+            -e TYPESENSE_HOST="${{ env.TYPESENSE_HOST_PROD }}" \
+            -e TYPESENSE_PORT="443" \
+            -e TYPESENSE_PROTOCOL="https" \
+            typesense/docsearch-scraper:0.11.0
