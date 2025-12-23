@@ -31,17 +31,17 @@ jobs:
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+          elif [[ "${{ github.ref }}" == refs/tags/v-* ]]; then
             echo "environment=prod" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref }}" == refs/tags/rc* ]]; then
+          elif [[ "${{ github.ref }}" == refs/tags/rc-* ]]; then
             echo "environment=test" >> $GITHUB_OUTPUT
           fi
 
       - name: Update scraper config and run (test)
         if: steps.env.outputs.environment == 'test'
         env:
-          DOCS_URL: "https://docs.opendatahub.testingmachine.eu"
-          DOCS_DOMAIN: "docs.opendatahub.testingmachine.eu"
+          DOCS_URL: "https://docs.dev.testingmachine.eu"
+          DOCS_DOMAIN: "docs.dev.testingmachine.eu"
         run: |
           jq --arg url "$DOCS_URL" --arg domain "$DOCS_DOMAIN" \
             '.start_urls = [$url + "/"] | .sitemap_urls = [$url + "/sitemap.xml"] | .allowed_domains = [$domain]' \
