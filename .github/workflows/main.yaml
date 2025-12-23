@@ -16,7 +16,7 @@ jobs:
 
   deploy-test:
     runs-on: ubuntu-24.04
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
     needs: test
     environment: test
     concurrency: deploy-test
@@ -38,6 +38,11 @@ jobs:
         env:
           NODE_ENV: test
           TESTING: true
+          TYPESENSE_COLLECTION: opendatahub-docs
+          TYPESENSE_HOST: typesense.docs.testingmachine.eu
+          TYPESENSE_PORT: "443"
+          TYPESENSE_PROTOCOL: https
+          TYPESENSE_SEARCH_ONLY_API_KEY: ${{ secrets.TYPESENSE_SEARCH_ONLY_API_KEY_TEST }}
         run: npm run build
 
       - name: Sync to S3 bucket
@@ -55,15 +60,35 @@ jobs:
   #   needs: test
   #   environment: prod
   #   concurrency: deploy-prod
+  #   env:
+  #     AWS_S3_BUCKET_NAME: 'opendatahub-web-docs-prod'  # TODO: update
   #   steps:
   #     - name: Checkout source code
   #       uses: actions/checkout@v2
 
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
+
+  #     - name: Install dependencies
+  #       run: npm ci --legacy-peer-deps
+
+  #     - name: Build Docusaurus site
+  #       env:
+  #         NODE_ENV: production
+  #         TYPESENSE_COLLECTION: opendatahub-docs
+  #         TYPESENSE_HOST: search.opendatahub.com  # TODO: update
+  #         TYPESENSE_PORT: "443"
+  #         TYPESENSE_PROTOCOL: https
+  #         TYPESENSE_SEARCH_ONLY_API_KEY: ${{ secrets.TYPESENSE_SEARCH_ONLY_API_KEY_PROD }}
+  #       run: npm run build
+
   #     - name: Sync to S3 bucket
   #       uses: noi-techpark/github-actions/aws-s3-bucket-sync@v2
   #       with:
-  #         access-key-id: ${{ secrets.AWS_NOI_WEB_S3_ACCESS_KEY_ID }}
-  #         secret-access-key: ${{ secrets.AWS_NOI_WEB_S3_SECRET_ACCESS_KEY }}
+  #         access-key-id: ${{ secrets.AWS_S3_ACCESS_KEY_ID }}
+  #         secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
   #         region: ${{ env.AWS_REGION }}
   #         s3-bucket-name: ${{ env.AWS_S3_BUCKET_NAME }}
-  #         folder: ./src
+  #         folder: ./build

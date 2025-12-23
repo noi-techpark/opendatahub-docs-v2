@@ -41,4 +41,34 @@ npm install -g docs-to-pdf
 
 ```
 npx docs-to-pdf docusaurus --initialDocURLs="[url_of_page_you_want_scrape_from]" --contentSelector="article"  --paginationSelector="a.pagination-nav__link.pagination-nav__link--next"
-``
+```
+
+## Deployment
+
+### GitHub Actions
+
+| Workflow | Trigger | Description |
+| :--- | :--- | :--- |
+| `deploy-typesense.yml` | Manual (environment: test/prod) | Deploy Typesense server to Docker runner |
+| `index-docs.yml` | Manual / Tag `v*` (prod) / Tag `rc*` (test) | Run DocSearch scraper to index documentation |
+
+### Required Secrets
+
+| Secret | Description |
+| :--- | :--- |
+| `TYPESENSE_API_KEY_TEST/PROD` | Admin API key for Typesense (scraper) |
+| `TYPESENSE_SEARCH_ONLY_API_KEY_TEST/PROD` | Search-only API key (frontend) |
+| `SSH_PRIVATE_KEY` | SSH key for deployment |
+| `GH_PERSONAL_ACCESS_TOKEN` | GitHub token for Docker registry |
+| `AWS_S3_ACCESS_KEY_ID` | AWS S3 access key |
+| `AWS_S3_SECRET_ACCESS_KEY` | AWS S3 secret key |
+
+Note: Typesense hosts are configured as env variables in the workflow files.
+
+### Deployment Flow
+
+1. **Deploy Typesense**: Run `deploy-typesense.yml` manually, selecting environment
+2. **Deploy Documentation**: Deploy the Docusaurus site (separate workflow)
+3. **Index Documentation**:
+   - Automatically triggered on `v*` tags (prod) or `rc*` tags (test)
+   - Or run `index-docs.yml` manually after deployment

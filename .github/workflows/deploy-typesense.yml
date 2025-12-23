@@ -1,0 +1,53 @@
+name: Deploy Typesense
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - test
+          - prod
+  push:
+    branches:
+      - typesense
+
+env:
+  PROJECT_NAME: odh-docs-typesense
+
+jobs:
+  deploy-typesense:
+    runs-on: ubuntu-22.04
+    concurrency: deploy-typesense-${{ github.event.inputs.environment || 'test' }}
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Create .env file (test)
+        if: ${{ github.event.inputs.environment == 'test' || github.event_name == 'push' }}
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          X_SERVER_PORT: 1073
+          X_TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY_TEST }}
+          X_CORS_DOMAINS: "https://docs.dev.testingmachine.eu"
+
+      - name: Create .env file (prod)
+        if: ${{ github.event.inputs.environment == 'prod' }}
+        uses: noi-techpark/github-actions/env-file@v2
+        env:
+          X_COMPOSE_PROJECT_NAME: ${{ env.PROJECT_NAME }}
+          X_SERVER_PORT: 1073
+          X_TYPESENSE_API_KEY: ${{ secrets.TYPESENSE_API_KEY_PROD }}
+          X_CORS_DOMAINS: "https://docs.opendatahub.com"  # TODO: update allowed domains
+
+      - name: Deploy application
+        uses: noi-techpark/github-actions/docker-deploy@v2
+        with:
+          hosts: ${{ github.event.inputs.environment || 'test' }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          docker-username: 'noi-techpark-bot'
+          docker-password: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          project-name: ${{ env.PROJECT_NAME }}

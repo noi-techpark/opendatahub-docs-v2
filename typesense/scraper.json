@@ -1,0 +1,16 @@
+{
+  "index_name": "opendatahub-docs",
+  "start_urls": [
+    "http://127.0.0.1:3000/"
+  ],
+  "sitemap_urls": ["http://127.0.0.1:3000/sitemap.xml"],
+  "allowed_domains": ["127.0.0.1"],
+  "selectors": {
+    "lvl0": { "selector": ".navbar__link--active, .menu__link--active", "default_value": "Documentation" },
+    "lvl1": "article header h1, .markdown h1, .theme-doc-markdown h1",
+    "lvl2": "article h2, .markdown h2, .theme-doc-markdown h2",
+    "lvl3": "article h3, .markdown h3, .theme-doc-markdown h3",
+    "lvl4": "article h4, .markdown h4, .theme-doc-markdown h4",
+    "text": "article p, article li, .markdown p, .markdown li, .theme-doc-markdown p, .theme-doc-markdown li"
+  }
+}
