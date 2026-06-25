@@ -1,0 +1,402 @@
+[
+  {
+    "from": "/appendices",
+    "to": "/reference/appendices"
+  },
+  {
+    "from": "/datasets",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/appendices.html",
+    "to": "/reference/appendices"
+  },
+  {
+    "from": "/en/latest/datasets.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/howto.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/howto/generic/webcomponents.html",
+    "to": "/tools/web-components/create-web-component"
+  },
+  {
+    "from": "/en/latest/howto/mobility/getstarted.html",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/en/latest/howto/tourism/alpinebits.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/howto/tourism/getstarted.html",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/en/latest/includes/API.html",
+    "to": "/use-data/cli"
+  },
+  {
+    "from": "/en/latest/includes/AlpineBits.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/includes/CLI.html",
+    "to": "/use-data/cli"
+  },
+  {
+    "from": "/en/latest/includes/R.html",
+    "to": "/reference/r-package"
+  },
+  {
+    "from": "/en/latest/includes/access-odh.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/includes/appdevel.html",
+    "to": "/build/app-development"
+  },
+  {
+    "from": "/en/latest/includes/bugrepo.html",
+    "to": "/build/app-development"
+  },
+  {
+    "from": "/en/latest/includes/corehacker.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/includes/domains.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/includes/involved.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/includes/json-license.html",
+    "to": "/reference/dataset-licenses"
+  },
+  {
+    "from": "/en/latest/index.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/intro.html",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/en/latest/mobility-tech.html",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/en/latest/tourism-tech.html",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/howto",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/howto/generic/webcomponents",
+    "to": "/tools/web-components/create-web-component"
+  },
+  {
+    "from": "/howto/mobility/getstarted",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/howto/tourism/alpinebits",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/howto/tourism/getstarted",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/includes/API",
+    "to": "/use-data/cli"
+  },
+  {
+    "from": "/includes/AlpineBits",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/includes/CLI",
+    "to": "/use-data/cli"
+  },
+  {
+    "from": "/includes/R",
+    "to": "/reference/r-package"
+  },
+  {
+    "from": "/includes/access-odh",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/includes/appdevel",
+    "to": "/build/app-development"
+  },
+  {
+    "from": "/includes/bugrepo",
+    "to": "/build/app-development"
+  },
+  {
+    "from": "/includes/corehacker",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/includes/domains",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/includes/involved",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/includes/json-license",
+    "to": "/reference/dataset-licenses"
+  },
+  {
+    "from": "/index",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/intro",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/mobility-tech",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/tourism-tech",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/wiki/Accommodation-Datamodel-changes",
+    "to": "/reference/accommodation-datamodel-changes"
+  },
+  {
+    "from": "/wiki/Accommodation-Workflow",
+    "to": "/reference/dataset-licenses"
+  },
+  {
+    "from": "/wiki/Api-Quota",
+    "to": "/reference/api-quota-limits"
+  },
+  {
+    "from": "/wiki/Common-Structures",
+    "to": "/reference/dataset-licenses"
+  },
+  {
+    "from": "/wiki/Content-API",
+    "to": "/get-started/introduction"
+  },
+  {
+    "from": "/wiki/Databrowser-Photo-Upload-on-Mobile",
+    "to": "/tools/data-browser/photo-upload-mobile"
+  },
+  {
+    "from": "/wiki/Dataset-Type",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/wiki/Deploying-with-Git-Tags",
+    "to": "/operate/deploying-with-git-tags"
+  },
+  {
+    "from": "/wiki/Deprecated-Api-in-Open-Data-Hub-Content-api",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/wiki/Distinct-Search-in-Open-Data-Hub-Content-api",
+    "to": "/reference/distinct-search"
+  },
+  {
+    "from": "/wiki/Emojis-in-Web-Components",
+    "to": "/tools/web-components/emojis-in-web-components"
+  },
+  {
+    "from": "/wiki/Endpoint-Migration-Guide",
+    "to": "/reference/endpoint-migration"
+  },
+  {
+    "from": "/wiki/EventShort-to-Event-Migration-guide",
+    "to": "/reference/eventshort-migration"
+  },
+  {
+    "from": "/wiki/Events-Datamodel-changes",
+    "to": "/reference/accommodation-datamodel-changes"
+  },
+  {
+    "from": "/wiki/Export-data-to-csv-format",
+    "to": "/use-data/export-to-csv"
+  },
+  {
+    "from": "/wiki/FAQ-The-result-set-seems-incorrect-when-a-structure-does-not-have-an-active-offer",
+    "to": "/faq/result-set-incorrect"
+  },
+  {
+    "from": "/wiki/Flightdata-API",
+    "to": "/reference/flightdata-api"
+  },
+  {
+    "from": "/wiki/Geoshapes-Api-and-Geo-Converter",
+    "to": "/reference/geoshapes-api"
+  },
+  {
+    "from": "/wiki/Geosorting-and-Locationfilter-usage",
+    "to": "/use-data/location-filtering"
+  },
+  {
+    "from": "/wiki/Get-all-datasets",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/wiki/Getting-Data-as-JsonLD---schema.org",
+    "to": "/reference/jsonld-schema-org"
+  },
+  {
+    "from": "/wiki/Getting-started-with-a-new-Data-Collector-development",
+    "to": "/build/developing-data-collector"
+  },
+  {
+    "from": "/wiki/Giving-Elastic-Search-logs-to-externals",
+    "to": "/operate/granting-log-access"
+  },
+  {
+    "from": "/wiki/Guidelines-for-developers-and-licenses",
+    "to": "/reference/guidelines-and-policies"
+  },
+  {
+    "from": "/wiki/Historical-Data-and-Request-Rate-Limits",
+    "to": "/reference/api-quota-limits"
+  },
+  {
+    "from": "/wiki/Home",
+    "to": "/get-started/introduction-2"
+  },
+  {
+    "from": "/wiki/How-a-Postgres-dump-can-be-imported-in-my-local-Database",
+    "to": "/operate/import-postgres-dump"
+  },
+  {
+    "from": "/wiki/How-a-bitmask-filter-works",
+    "to": "/use-data/bitmask-filter"
+  },
+  {
+    "from": "/wiki/How-to-Filter-and-Search",
+    "to": "/tools/data-browser/filter-and-search"
+  },
+  {
+    "from": "/wiki/How-to-Filter-in-the-Data-Browser-on-Mobile",
+    "to": "/tools/data-browser/filter-and-search"
+  },
+  {
+    "from": "/wiki/How-to-Manage-eCharging-Station-Data-via-the-Data-Browser-on-Mobile",
+    "to": "/tools/data-browser/manage-echarging-station-data"
+  },
+  {
+    "from": "/wiki/How-to-Register-and-Login-to-the-Data-Browser-on-Mobile",
+    "to": "/tools/data-browser/register-and-login-mobile"
+  },
+  {
+    "from": "/wiki/How-to-create-a-web-component-that-meets-all-the-requirements-for-publication",
+    "to": "/tools/web-components/create-web-component"
+  },
+  {
+    "from": "/wiki/How-to-implement-a-web-component-in-your-application",
+    "to": "/tools/web-components/implementing-web-components"
+  },
+  {
+    "from": "/wiki/Http-Referer",
+    "to": "/reference/http-referer"
+  },
+  {
+    "from": "/wiki/I-get-CORS-errors-by-using-the-open-data-hub-api",
+    "to": "/use-data/cors-errors"
+  },
+  {
+    "from": "/wiki/Kibana-Elastic",
+    "to": "/operate/copy-kibana-dashboard"
+  },
+  {
+    "from": "/wiki/Migration-Status-and-where-the-Data-can-be-edited",
+    "to": "/reference/migration-status"
+  },
+  {
+    "from": "/wiki/ODHActivityPoi",
+    "to": "/reference/odh-activity-poi-endpoint"
+  },
+  {
+    "from": "/wiki/Open-Data-Hub-Imageresizer",
+    "to": "/tools/web-components/imageresizer"
+  },
+  {
+    "from": "/wiki/Operationschedule-Format",
+    "to": "/reference/operation-schedule-format"
+  },
+  {
+    "from": "/wiki/Push-data-to-Publisher",
+    "to": "/build/push-data-to-publisher"
+  },
+  {
+    "from": "/wiki/REUSE",
+    "to": "/reference/reuse-compliance"
+  },
+  {
+    "from": "/wiki/Search-over-all-Entities-in-Open-Data-Hub-Content-api",
+    "to": "/reference/search-endpoints"
+  },
+  {
+    "from": "/wiki/Suedtirol-Wine-Pois-and-WineAwards-Datamodel-changes",
+    "to": "/reference/accommodation-datamodel-changes"
+  },
+  {
+    "from": "/wiki/Tags",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/wiki/Tags-Migration-Guide",
+    "to": "/reference/mobility-tech"
+  },
+  {
+    "from": "/wiki/The-seed-parameter",
+    "to": "/reference/seed-parameter"
+  },
+  {
+    "from": "/wiki/Time-series-API",
+    "to": "/reference/time-series-api"
+  },
+  {
+    "from": "/wiki/Time-series-API-filter-operators",
+    "to": "/reference/dlt-operator"
+  },
+  {
+    "from": "/wiki/Transmodel-API",
+    "to": "/reference/siri-lite-endpoints"
+  },
+  {
+    "from": "/wiki/Using-datefilters-on-the-Tourism-Api",
+    "to": "/use-data/date-filters"
+  },
+  {
+    "from": "/wiki/Using-rawfilter-and-rawsort-on-the-Open-Data-Hub-Content-Api",
+    "to": "/reference/filter-and-sort"
+  },
+  {
+    "from": "/wiki/Using-tagfilter-on-the-Open-Data-Hub-Content-Api",
+    "to": "/use-data/filtering-with-tagfilter"
+  },
+  {
+    "from": "/wiki/Web-Components",
+    "to": "/tools/web-components/web-components-overview"
+  },
+  {
+    "from": "/wiki/Webcomponent-Skiareas",
+    "to": "/tools/web-components/ski-areas-webcomponent"
+  }
+]

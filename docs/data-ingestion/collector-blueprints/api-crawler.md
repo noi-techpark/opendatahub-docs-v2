@@ -23,7 +23,7 @@ Implementation reference:
 
   * **Scheduled Execution**: Uses CRON expressions for flexible, automated polling of APIs.
   * **Pull-Based Model**: Actively fetches data from source APIs, making it independent of the source's ability to push.
-  * **Highly Configurable Crawling**: Powered by the [go-apigorowler](https://github.com/noi-techpark/go-apigorowler) library, allowing for complex API interaction logic—including authentication, pagination, and dynamic requests—to be defined in a single YAML file.
+  * **Highly Configurable Crawling**: Powered by the [go-silky](https://github.com/noi-techpark/go-silky) library, allowing for complex API interaction logic—including authentication, pagination, and dynamic requests—to be defined in a single YAML file.
   * **Batch and Stream Processing**: Can be configured to either wait for the entire crawl to finish and publish a single result, or to publish data items individually as they are discovered during the crawl.
 
 
@@ -46,7 +46,7 @@ The following environment variables are essential for configuring the API Crawle
 | `MQ_URI` | The connection URI for the RabbitMQ instance. | `amqp://guest:guest@rabbitmq` |
 | `MQ_CLIENT` | A unique identifier for the data collector client connecting to RabbitMQ. | `dc-api-crawler-client` |
 | `MQ_EXCHANGE` | The RabbitMQ exchange to which the collected data will be published. | `ingress` |
-| `LOGLEVEL` | The logging level for the collector. | `DEBUG` |
+| `LOG_LEVEL` | The logging level for the collector. | `DEBUG` |
 | `PROVIDER` | The unique identifier for the data provider and dataset. This value is included in the published data. | `myprovider/mydataset` |
 | `CRON` | The cron schedule string defining how often the crawler should run, including seconds. | `0 * * * * *` |
 | `CONFIG_PATH` | The file path to the API crawler's configuration file. | `configuration_file.yaml` |
@@ -55,7 +55,7 @@ The following environment variables are essential for configuring the API Crawle
 
 ### `configuration_file.yaml` Configuration
 
-The `CONFIG_PATH` environment variable points to the `configuration_file.yaml` file, which is the core of the API Crawler's functionality. This YAML file uses the `ApiGorowler` library's declarative syntax to define:
+The `CONFIG_PATH` environment variable points to the `configuration_file.yaml` file, which is the core of the API Crawler's functionality. This YAML file uses the `go-silky` library's declarative syntax to define:
 
 * **API requests**: URLs, HTTP methods, headers, and body content.
 * **Authentication**: How to authenticate with the target APIs.
@@ -63,6 +63,6 @@ The `CONFIG_PATH` environment variable points to the `configuration_file.yaml` f
 * **Flow control**: Using `foreach` loops for iterating over collections or paginated results.
 * **Context management**: How data from different steps is combined and made available to subsequent steps.
 
-For detailed information on configuring the `configuration_file.yaml`, please refer to the [ApiGorowler package documentation](https://github.com/noi-techpark/go-apigorowler#apigorowler). The documentation covers the schema for `request` and `foreach` steps, authentication methods, `jq` and Go template usage, and context management.
+For detailed information on configuring the `configuration_file.yaml`, please refer to the [go-silky package documentation](https://github.com/noi-techpark/go-silky). The documentation covers the schema for `request` and `foreach` steps, authentication methods, `jq` and Go template usage, and context management.
 
-The `ApiGorowler` [configuration builder IDE](https://github.com/noi-techpark/go-apigorowler/releases) is highly recommended for developing and debugging your `configuration_file.yaml` files, allowing you to execute and inspect the configuration in real-time.
+The `go-silky` [configuration builder IDE](https://github.com/noi-techpark/go-silky/releases) is highly recommended for developing and debugging your `configuration_file.yaml` files, allowing you to execute and inspect the configuration in real-time.

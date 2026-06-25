@@ -34,7 +34,7 @@ The [infrastructure-v2](https://github.com/noi-techpark/infrastructure-v2) repos
 To start the core infrastructure without any domain-specific APIs:
 
 ```bash
-git clone git@github.com:noi-techpark/infrastructure-v2.git
+git clone https://github.com/noi-techpark/infrastructure-v2.git
 cd infrastructure-v2
 docker compose -f docker-compose.yml up
 ````
@@ -56,7 +56,7 @@ Now, your locally running collectors and transformers should be able to connect 
 
 ### 2.3. Useful Local Endpoints
 
-  * **RabbitMQ Management Interface**: `http://localhost:15672` (credentials: `guest/guest`). Use this to monitor message queues.
+  * **RabbitMQ Management Interface**: `http://localhost:15673` (credentials: `guest/guest`). Use this to monitor message queues. The `infrastructure-v2` stack maps the management UI to host port **15673**. A collector started with its own broker via `--profile dev` would take `15672`, so run collectors with `--profile bdp` against this shared broker to avoid a port conflict.
   * **MongoDB**: `mongodb://localhost:27017/?directConnection=true`. You can use a tool like MongoDB Compass to connect.
 
 ## 3. Getting Hands-on: Collector and Transformer Development (Golang)

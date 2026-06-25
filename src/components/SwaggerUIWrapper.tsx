@@ -4,7 +4,20 @@
 
 import React, { useEffect, useState } from 'react';
 
-export default function SwaggerUIWrapper() {
+interface SwaggerUIWrapperProps {
+  /** URL of the OpenAPI/Swagger spec to render. */
+  url: string;
+  /** How operations are expanded by default: 'list' | 'full' | 'none'. */
+  docExpansion?: 'list' | 'full' | 'none';
+  /** Enable the in-browser "Try it out" feature. */
+  tryItOutEnabled?: boolean;
+}
+
+export default function SwaggerUIWrapper({
+  url,
+  docExpansion = 'none',
+  tryItOutEnabled = true,
+}: SwaggerUIWrapperProps) {
   const [SwaggerUI, setSwaggerUI] = useState<any>(null);
 
   useEffect(() => {
@@ -12,12 +25,17 @@ export default function SwaggerUIWrapper() {
       setSwaggerUI(() => module.default);
       import('swagger-ui-react/swagger-ui.css'); // Load CSS dynamically
       import('@site/src/css/swagger-dark-fix.css');
+      import('@site/src/css/swagger-badge-fix.css');
     });
   }, []);
 
   if (!SwaggerUI) return <div>Loading Swagger UI...</div>;
 
   return (
-    <SwaggerUI url="https://mobility.api.opendatahub.com/v2/apispec" tryItOutEnabled={true} />
+    <SwaggerUI
+      url={url}
+      docExpansion={docExpansion}
+      tryItOutEnabled={tryItOutEnabled}
+    />
   );
 }

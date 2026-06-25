@@ -172,7 +172,7 @@ func main() {
 **Key SDK Components:**
 
   * **`ms.InitWithEnv(ctx, "", &env)`**: This function is the SDK's entry point for initialization. It sets up:
-      * **Structured Logging (`slog`)**: Configures logging based on `LOGLEVEL`.
+      * **Structured Logging (`slog`)**: Configures logging based on `LOG_LEVEL`.
       * **Messaging**: Initializes the RabbitMQ client using `MQ_URI`, `MQ_CLIENT`, `MQ_EXCHANGE`. The SDK handles publishing raw data to the message queue.
       * **Telemetry**: Sets up OpenTelemetry for tracing and metrics, using `TELEMETRY_TRACE_GRPC_ENDPOINT` (seen in Helm config).
   * **`tel.FlushOnPanic()`**: Ensures that any buffered telemetry data (traces, metrics) is sent to the configured endpoint before the application crashes due to a panic. This is crucial for debugging production issues.
@@ -299,7 +299,7 @@ Docker is the recommended way to package and deploy your data collector. The pro
 #
 # SPDX-License-Identifier: CC0-1.0
 
-FROM golang:1.23.7-bookworm AS base
+FROM golang:1.25-bookworm AS base
 
 EXPOSE 8080 # Expose port 8080 (though this collector doesn't run a web server, it's a common practice)
 
@@ -331,6 +331,10 @@ CMD ["go", "test", "."] # Run Go tests
 
 </TabItem>
 </Tabs>
+
+:::warning
+Keep the `go` directive in your `go.mod` no higher than the Go version of this Dockerfile's base image (this guide uses `golang:1.25`). If you run `go mod init` / `go mod tidy` with a newer local Go, the directive is stamped to that version and the container build fails with `go.mod requires go >= 1.25.0 (running go 1.23.7)`. Either pin the `go` directive to match the image or bump the base image.
+:::
 
 **Critical Points:**
 
@@ -409,7 +413,7 @@ networks:
 When developing you must careful to start the collector with `rabbitmq` service
 
 ```
-docker compose up --profile dev
+docker compose --profile dev up
 ```
 :::
 
@@ -417,7 +421,7 @@ docker compose up --profile dev
 When testing the complete pipeline (comprehensive of the transformer) you need to start the full Open Data Hub Core and you must careful to start the collector without `rabbitmq` service
 
 ```
-docker compose up --profile bdp
+docker compose --profile bdp up
 ```
 :::
 
@@ -484,13 +488,13 @@ To get your S3 poller data collector running locally:
 5.  **Start Collector**: From your collector's directory (`opendatahub-collectors/collectors/s3-poller`), run its `docker-compose.yml`:
     ```bash
     cd opendatahub-collectors/collectors/s3-poller # Adjust path if needed
-    docker compose up --profile bdp --build # Build and run your collector
+    docker compose --profile bdp up --build # Build and run your collector
     ```
 
 ### Testing the Data Flow
 
   * **Check Collector Logs**: Observe the logs of your `app` container. You should see messages like "Starting data collector...", "Polling S3 bucket...", and "Published dummy S3 data to message queue." (if using the dummy example).
-  * **RabbitMQ Management**: Access `http://localhost:15672` (guest/guest) in your browser. Navigate to "Queues" and check the `ingress` queue (or whatever `MQ_EXCHANGE` you configured). You should see messages accumulating there.
+  * **RabbitMQ Management**: Access `http://localhost:15673` (guest/guest) in your browser. Navigate to "Queues" and check the `ingress` queue (or whatever `MQ_EXCHANGE` you configured). You should see messages accumulating there.
   * **MongoDB**: Connect to `mongodb://localhost:27017/?directConnection=true` using a tool like MongoDB Compass. You can inspect the raw data stored by the SDK before it's picked up by a transformer.
 
 This setup allows you to develop and test your data collector in an environment that closely mirrors the production Kubernetes cluster, ensuring smooth integration with the Open Data Hub ecosystem.

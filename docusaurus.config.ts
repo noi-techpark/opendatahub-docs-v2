@@ -67,20 +67,9 @@ const config: Config = {
       '@docusaurus/plugin-content-docs',
       {
         id: 'general',
-        path: 'docs/tutorial',
+        path: 'docs/get-started',
         routeBasePath: '/',
         sidebarPath: require.resolve('./sidebarsGeneral.ts'),
-        // Only include root-level files (not core/ or data/)
-        // include: ['intro.md', 'test-api.mdx'],
-      },
-    ],
-    [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'core',
-        path: 'docs/core',
-        routeBasePath: 'core',
-        sidebarPath: require.resolve('./sidebarsCore.ts'),
       },
     ],
     [
@@ -90,6 +79,45 @@ const config: Config = {
         path: 'docs/data-ingestion',
         routeBasePath: 'data-ingestion',
         sidebarPath: require.resolve('./sidebarsDataIngestion.ts'),
+      },
+    ],
+    // --- Documentation areas (knowledge-base migration) ---
+    [
+      '@docusaurus/plugin-content-docs',
+      { id: 'use-data', path: 'docs/use-data', routeBasePath: 'use-data',
+        sidebarPath: require.resolve('./sidebarsArea.ts') },
+    ],
+    [
+      '@docusaurus/plugin-content-docs',
+      { id: 'tools', path: 'docs/tools', routeBasePath: 'tools',
+        sidebarPath: require.resolve('./sidebarsArea.ts') },
+    ],
+    // LLM-ready output: /llms.txt index, /llms-full.txt corpus, and per-page raw .md.
+    // HTML-based, so it covers all four docs instances + the custom mega-menu.
+    [
+      '@signalwire/docusaurus-plugin-llms-txt',
+      {
+        siteTitle: 'Open Data Hub Documentation',
+        siteDescription: 'APIs and data ingestion documentation for the Open Data Hub.',
+        depth: 2,
+        // Order the index by the reader's journey: Get Started, then Use the Data,
+        // then Data Ingestion, then Tools.
+        includeOrder: [
+          '/',
+          '/quickstart',
+          '/domains-and-datasets',
+          '/licensing',
+          '/use-data/**',
+          '/data-ingestion/**',
+          '/tools/**',
+        ],
+        content: {
+          enableMarkdownFiles: true,
+          enableLlmsFullTxt: true,
+          includeDocs: true,
+          includeGeneratedIndex: false, // drop auto-generated category stubs
+          excludeRoutes: ['/search'],    // drop the search page
+        },
       },
     ],
   ],
@@ -109,113 +137,104 @@ const config: Config = {
       //   target: '_self',
       // },
       items: [
+        {type: 'docSidebar', sidebarId: 'generalSidebar', docsPluginId: 'general', position: 'left', label: 'Get Started'},
         {
-          type: 'docSidebar',
-          sidebarId: 'generalSidebar',
-          docsPluginId: 'general',
-          position: 'left',
-          label: 'Tutorial',
-        },
-        // {to: '/blog', label: 'Blog', position: 'left'},
-        {
-          label: 'Build',
+          label: 'Data Ingestion',
           to: '#',
+          // NOTE: each column renders a header cell first, so a column with N items
+          // needs N+1 rows. Columns: GetStarted=2, Build=2, Blueprints=4, Reference=3.
           layout: [
             '0 1 2 3',
             '0 1 2 3',
             '0 1 2 3',
-            '0 1 2 .',
+            '. . 2 3',
+            '. . 2 .',
           ],
           items_: [
             {
-              label: 'Core',
+              label: 'Get started',
               items: [
-                {
-                  label: 'Concepts',
-                  sublabel: 'Explore Open Data Hub architecture and concepts',
-                  to: 'core/concepts/intro',
-                  icon: 'FaSitemap',
-                  activeBaseRegex: '^/core/concepts/*',
-                },
-                {
-                  label: 'Deploy & Operate in K8s',
-                  sublabel: 'Deploy and operate Open Data Hub in production',
-                  to: 'core/k8s/intro',
-                  icon: 'PiGraph',
-                  activeBaseRegex: '^/core/k8s/*',
-                },
+                {label: 'Getting started', sublabel: 'Run the stack locally and ingest your first data', to: 'data-ingestion/getting-started', icon: 'FaRocket', activeBaseRegex: '^/data-ingestion/getting-started'},
+                {label: 'Ingesting time series', sublabel: 'Push time series data into the Open Data Hub', to: 'data-ingestion/ingesting-time-series', icon: 'FaClock', activeBaseRegex: '^/data-ingestion/ingesting-time-series'},
               ],
             },
             {
-              label: 'Data Ingestion',
+              label: 'Build from scratch',
               items: [
-                {
-                  label: 'Getting Started',
-                  sublabel: 'Deploy Open Data core locally and start ingesting data',
-                  to: 'data-ingestion/getting-started',
-                  icon: 'FaRocket',
-                },
-                {
-                  label: 'Build a Collector',
-                  sublabel: 'Contribute creating new Data Collector',
-                  to: 'data-ingestion/data-collector-from-scratch',
-                  icon: 'BiSolidCollection',
-                },
-                {
-                  label: 'Build a Transformer',
-                  sublabel: 'Contribute creating new Data Transformer',
-                  to: 'data-ingestion/data-transformer-from-scratch',
-                  icon: 'GiTransform',
-                },
+                {label: 'Data collector', sublabel: 'Write a new collector step by step', to: 'data-ingestion/data-collector-from-scratch', icon: 'BiSolidCollection'},
+                {label: 'Data transformer', sublabel: 'Write a new transformer step by step', to: 'data-ingestion/data-transformer-from-scratch', icon: 'GiTransform'},
               ],
             },
             {
-              label: 'Using our Data',
+              label: 'Collector blueprints',
               items: [
-                
+                {label: 'API crawler', sublabel: 'Poll a REST API on a schedule', to: 'data-ingestion/collector-blueprints/api-crawler', icon: 'FaSpider'},
+                {label: 'MQTT client', sublabel: 'Subscribe to an MQTT broker', to: 'data-ingestion/collector-blueprints/mqtt-client', icon: 'FaWifi'},
+                {label: 'REST push', sublabel: 'Receive data pushed over HTTP', to: 'data-ingestion/collector-blueprints/rest-push', icon: 'FaUpload'},
+                {label: 'S3 poller', sublabel: 'Ingest files from an S3 bucket', to: 'data-ingestion/collector-blueprints/s3-poller', icon: 'FaAws'},
               ],
             },
             {
-              label: 'Tools',
+              label: 'Reference',
               items: [
-                
+                {label: 'Transformer boilerplate', sublabel: 'Starting point for a transformer', to: 'data-ingestion/transformer-blueprints/transformer-boilerplate', icon: 'GiGears'},
+                {label: 'SDKs', sublabel: 'Ingestion SDKs and libraries', to: 'data-ingestion/sdks', icon: 'FaCode'},
+                {label: 'Local development', sublabel: 'Develop and debug collectors locally', to: 'data-ingestion/development/intro', icon: 'FaTerminal'},
               ],
             },
           ],
         },
         {
-          label: 'APIs',
+          label: 'Using our Data',
           to: '#',
+          // Header cell first => N+1 rows per column. Columns: Content=6, TimeSeries=3,
+          // Transmodel=2, Auth=2.
           layout: [
             '0 1 2 3',
             '0 1 2 3',
+            '0 1 2 3',
+            '0 1 . .',
+            '0 . . .',
+            '0 . . .',
+            '0 . . .',
           ],
           items_: [
             {
-              label: 'Content APIs',
+              label: 'Content API',
               items: [
-                {
-                  label: 'Swagger',
-                  sublabel: 'Try out our latest Content API schema with real data',
-                  to: 'tutorial-basics/congratulations',
-                  activeBaseRegex: '^/crossrefs/.*',
-                },
+                {label: 'Reference', sublabel: 'Endpoints, fields and the datamodel', to: 'use-data/content-api/reference', icon: 'FaBook', activeBaseRegex: '^/use-data/content-api/'},
+                {label: 'Filtering and sorting', sublabel: 'Search, filter, sort and paginate', to: 'use-data/content-api/filtering-and-sorting', icon: 'FaFilter'},
+                {label: 'Output formats', sublabel: 'JSON, CSV and response shaping', to: 'use-data/content-api/output-formats', icon: 'FaFileExport'},
+                {label: 'Deprecations', sublabel: 'Removed fields and datamodel migration', to: 'use-data/content-api/deprecations', icon: 'FaExclamationTriangle'},
+                {label: 'AlpineBits', sublabel: 'Tourism data exchange standard', to: 'use-data/content-api/alpinebits', icon: 'FaExchangeAlt'},
+                {label: 'Swagger', sublabel: 'Interactive Content API explorer', to: 'use-data/content-api/swagger', icon: 'FaFlask'},
               ],
             },
             {
-              label: 'Timeseries APIs',
+              label: 'Time Series API',
               items: [
-                {
-                  label: 'Swagger',
-                  sublabel: 'Try out our latest Timeseries API schema with real data',
-                  to: 'tutorial-basics/congratulations',
-                  activeBaseRegex: '^/product/.*',
-                },
-                
+                {label: 'Reference', sublabel: 'Mobility and time series endpoints', to: 'use-data/time-series-api/reference', icon: 'FaChartLine', activeBaseRegex: '^/use-data/time-series-api/'},
+                {label: 'Filtering', sublabel: 'Filter by station type, tags and operators', to: 'use-data/time-series-api/filtering', icon: 'FaFilter'},
+                {label: 'Swagger', sublabel: 'Interactive Time Series API explorer', to: 'use-data/time-series-api/swagger', icon: 'FaFlask'},
+              ],
+            },
+            {
+              label: 'Transmodel API',
+              items: [
+                {label: 'NeTEx & SIRI-Lite', sublabel: 'Public transport data standards', to: 'use-data/transmodel-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/transmodel-api/'},
+                {label: 'Swagger', sublabel: 'Interactive Transmodel API explorer', to: 'use-data/transmodel-api/swagger', icon: 'FaFlask'},
+              ],
+            },
+            {
+              label: 'Authentication & access',
+              items: [
+                {label: 'Authentication', sublabel: 'Keycloak, OAuth2 tokens and RBAC', to: 'use-data/authentication-and-access/authentication', icon: 'FaKey', activeBaseRegex: '^/use-data/authentication-and-access/'},
+                {label: 'Quotas, CLI & R', sublabel: 'Rate limits, CLI access and the R package', to: 'use-data/authentication-and-access/quotas-and-tools', icon: 'FaTachometerAlt'},
               ],
             },
           ],
         },
+        {type: 'docSidebar', sidebarId: 'areaSidebar', docsPluginId: 'tools', position: 'left', label: 'Tools'},
         // // { to: 'tutorial-basics/congratulations', label: 'Community Blog', position: 'right' },
         // { to: 'tutorial-basics/congratulations', label: 'Team', position: 'right' },
         // {
@@ -235,16 +254,18 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
     typesense: {
-      typesenseCollectionName: process.env.TYPESENSE_COLLECTION!,
+      // Fallback defaults so `npm run start`/`build` work without TYPESENSE_* env
+      // (local search won't connect; set real env/.env in production).
+      typesenseCollectionName: process.env.TYPESENSE_COLLECTION || 'odh-docs',
       typesenseServerConfig: {
         nodes: [
           {
-            host: process.env.TYPESENSE_HOST!,
-            port: Number(process.env.TYPESENSE_PORT!),
-            protocol: process.env.TYPESENSE_PROTOCOL! as 'http' | 'https',
+            host: process.env.TYPESENSE_HOST || 'localhost',
+            port: Number(process.env.TYPESENSE_PORT || '8108'),
+            protocol: (process.env.TYPESENSE_PROTOCOL || 'http') as 'http' | 'https',
           },
         ],
-        apiKey: process.env.TYPESENSE_SEARCH_ONLY_API_KEY!,
+        apiKey: process.env.TYPESENSE_SEARCH_ONLY_API_KEY || 'search-only-key',
       },
       typesenseSearchParameters: {
         query_by: 'content,hierarchy.lvl0,hierarchy.lvl1,hierarchy.lvl2,hierarchy.lvl3,hierarchy.lvl4,hierarchy.lvl5,hierarchy.lvl6',

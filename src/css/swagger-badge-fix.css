@@ -1,0 +1,29 @@
+/*
+SPDX-FileCopyrightText: 2024 NOI Techpark <digital@noi.bz.it>
+
+SPDX-License-Identifier: AGPL-3.0-or-later
+*/
+
+/*
+ * Light-mode fix for Swagger UI's title version badges (e.g. "1.0", "OAS 3.0").
+ *
+ * Swagger UI wraps the badge text in a <pre>. Docusaurus styles <pre> globally for
+ * code blocks (light background + padding + border-radius), which covers the badge's
+ * own coloured pill and hides its white text, leaving empty outlined pills in light
+ * mode. Reset the inner <pre> so the pill background (set on the parent <small>) and
+ * the white text show.
+ *
+ * Dark mode is themed separately in swagger-dark-fix.css and renders correctly, so it
+ * is intentionally left untouched here.
+ */
+html:not([data-theme='dark']) .swagger-ui .info .title small pre {
+  background: transparent !important;
+  color: #fff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-size: 1em !important;
+  line-height: 1.4 !important;
+}

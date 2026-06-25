@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /collector-blueprints/transformer-boilerplate
+slug: /transformer-blueprints/transformer-boilerplate
 ---
 
 
@@ -71,8 +71,8 @@ To create a new transformer using the boilerplate, follow these steps:
 After the boilerplate is set up, you will have a functional, albeit minimal, transformer. Your primary task will be to:
 
 1.  **Implement Transformation Logic**: Modify the `src/main.go` and potentially `src/dto.go` files in your new transformer's directory to implement the specific data parsing, validation, and mapping logic required to convert your raw data into the Open Data Hub's BDP format.
-2.  **Configure Environment Variables**: Populate the `.env.example` file with actual credentials and specific configurations for your local development. For deployment, ensure your Helm values (e.g., in `infrastructure/helm/<ORIGIN>.yaml`) are correctly configured, especially for sensitive data using Kubernetes secrets.
-3.  **Test Your Transformer**: Utilize the testing patterns (e.g., `main_test.go` with `bdpmock`) to ensure your transformation logic is correct and robust.
+2.  **Configure Environment Variables**: Copy `.env.example` to `.env` and fill in the values for your local development. If the generated `.env.example` uses `ODH_TOKEN_URL` / `ODH_CLIENT_ID` / `ODH_CLIENT_SECRET`, rename them to `BDP_TOKEN_URL` / `BDP_CLIENT_ID` / `BDP_CLIENT_SECRET`, which is what the bundled `go-bdp-client` (v1.4 and later) actually reads. For deployment, ensure your Helm values (e.g., in `infrastructure/helm/<ORIGIN>.yaml`) are correctly configured, especially for sensitive data using Kubernetes secrets.
+3.  **Test Your Transformer**: The generator does not scaffold a test file, so create a `main_test.go` using `bdpmock` (provided by `go-bdp-client`) to ensure your transformation logic is correct and robust.
 4.  **Deploy**: Use the generated Dockerfile and Helm charts to build and deploy your transformer to your development, testing, and production environments.
 
 This boilerplate significantly reduces the initial setup time, allowing you to focus immediately on the unique aspects of your data transformation.

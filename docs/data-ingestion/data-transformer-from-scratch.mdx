@@ -133,12 +133,16 @@ The above credentials are strictly for **testing and development environments**.
 <TabItem value="go" label="Using Go SDK">
 When using the `go-bdp-client` SDK, authentication is largely transparent, simplifying development. You only need to configure the relevant environment variables:
 
-* `ODH_TOKEN_URL`: The URL of the OAuth2 token endpoint.
-* `ODH_CLIENT_ID`: The client ID for your transformer.
-* `ODH_CLIENT_SECRET`: The client secret for your transformer.
+* `BDP_TOKEN_URL`: The URL of the OAuth2 token endpoint.
+* `BDP_CLIENT_ID`: The client ID for your transformer.
+* `BDP_CLIENT_SECRET`: The client secret for your transformer.
+
+:::info
+These `BDP_*` names apply to `go-bdp-client` v1.4 and later, which the boilerplate uses. Collectors or transformers pinned to `go-bdp-client` v1.3 or earlier read the equivalent `ODH_TOKEN_URL`, `ODH_CLIENT_ID`, and `ODH_CLIENT_SECRET` instead.
+:::
 
 The SDK (specifically `bdplib.FromEnv()` and its underlying components) will automatically:
-1.  Fetch an access token from the `ODH_TOKEN_URL` using the provided client credentials.
+1.  Fetch an access token from the `BDP_TOKEN_URL` using the provided client credentials.
 2.  Refresh the token automatically before it expires.
 3.  Include the `Authorization: Bearer <access_token>` header in all requests made to the Timeseries Writer API.
 
@@ -151,7 +155,7 @@ For a deeper understanding of the authentication flow or for manual testing/debu
 
 ```bash
 curl -X POST \
-  "[https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token](https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token)" \
+  "https://auth.opendatahub.testingmachine.eu/auth/realms/noi/protocol/openid-connect/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=client_credentials&client_id=odh-mobility-datacollector-development&client_secret=7bd46f8f-c296-416d-a13d-dc81e68d0830"
 ````
@@ -212,7 +216,7 @@ func main() {
     slog.Info("pushing datatypes on startup")
     // Sync all defined data types to the BDP writer.
     // This is typically done once on startup to ensure all required types exist.
-    b.SyncDataTypes(OriginStationType, dataTypeList.All())
+    b.SyncDataTypes(dataTypeList.All())
 
     slog.Info("listening")
     // Initialize the transformer listener.
@@ -241,7 +245,7 @@ func TransformWithBdp(bdp bdplib.Bdp) tr.Handler[Forecast] {
 **Key SDK Integration Points:**
 
   * **`ms.InitWithEnv`**: (Already discussed for collectors) Initializes common services like logging, messaging consumer, and telemetry based on `tr.Env`.
-  * **`bdplib.FromEnv()`**: This function from the `go-bdp-client` simplifies the initialization of the BDP client. It automatically reads environment variables prefixed with `BDP_` and `ODH_` to configure the base URL, provenance details, and OAuth2 authentication (token URL, client ID/secret). This centralizes authentication logic.
+  * **`bdplib.FromEnv()`**: This function from the `go-bdp-client` simplifies the initialization of the BDP client. It automatically reads environment variables prefixed with `BDP_` to configure the base URL, provenance details, and OAuth2 authentication (token URL, client ID/secret). This centralizes authentication logic.
   * **`tel.FlushOnPanic()`**: Essential for ensuring traces are sent before a crash.
   * **`tr.NewTr[Forecast](ctx, env)`**: Creates a new transformer listener instance. The `[Forecast]` type parameter specifies the expected Go struct that the raw data (received as `rdb.Raw[Forecast]`) will be unmarshaled into. The SDK handles unmarshalling the raw `[]byte` into this Go struct for you.
   * **`listener.Start(ctx, TransformWithBdp(b))`**: This is the main loop of the transformer. It starts consuming messages from the configured queue. For each message, it calls the `TransformWithBdp` handler function.
@@ -484,7 +488,7 @@ func SyncDataTypes(bdp bdplib.Bdp) {
     // ... similar for occupied data types ...
 
     // Synchronize the defined data types with BDP under the specific stationType.
-    err := bdp.SyncDataTypes(stationType, dataTypes)
+    err := bdp.SyncDataTypes(dataTypes)
     ms.FailOnError(context.Background(), err, "failed to sync types")
 }
 ```
@@ -524,7 +528,7 @@ The Dockerfile for a transformer is very similar to a collector's, with the crit
 #
 # SPDX-License-Identifier: CC0-1.0
 
-FROM golang:1.23.7-bookworm as base
+FROM golang:1.25-bookworm as base
 
 FROM base as build-env
 WORKDIR /app
@@ -617,7 +621,7 @@ networks:
 When developing you must careful to start the transformer with `rabbitmq` service
 
 ```
-docker compose up --profile dev
+docker compose --profile dev up
 ```
 :::
 
@@ -625,7 +629,7 @@ docker compose up --profile dev
 When testing the complete pipeline (comprehensive of the collector) you need to start the full Open Data Hub Core and you must careful to start the transformer without `rabbitmq` service
 
 ```
-docker compose up --profile bdp
+docker compose --profile bdp up
 ```
 :::
 
@@ -668,13 +672,13 @@ envSecretRef: # Reference Kubernetes secrets for sensitive information
   - name: MQ_URI
     secret: rabbitmq-svcbind # Secret containing RabbitMQ connection URI
     key: uri
-  - name: ODH_TOKEN_URL # OAuth token URL from secret
+  - name: BDP_TOKEN_URL # OAuth token URL from secret
     secret: odh-oauth-client-credentials
     key: token_url
-  - name: ODH_CLIENT_ID # OAuth Client ID from secret
+  - name: BDP_CLIENT_ID # OAuth Client ID from secret
     secret: odh-oauth-client-credentials
     key: client_id
-  - name: ODH_CLIENT_SECRET # OAuth Client Secret from secret
+  - name: BDP_CLIENT_SECRET # OAuth Client Secret from secret
     secret: odh-oauth-client-credentials
     key: client_secret
 
@@ -685,7 +689,7 @@ envSecretRef: # Reference Kubernetes secrets for sensitive information
 
 **Critical Points (Unique to Transformer / OAuth):**
 
-  * **OAuth Credentials in Secrets**: For production, `ODH_CLIENT_ID`, `ODH_CLIENT_SECRET`, and `ODH_TOKEN_URL` should **always** be loaded from Kubernetes secrets using `envSecretRef`. This ensures sensitive authentication details are not committed to Git.
+  * **OAuth Credentials in Secrets**: For production, `BDP_CLIENT_ID`, `BDP_CLIENT_SECRET`, and `BDP_TOKEN_URL` should **always** be loaded from Kubernetes secrets using `envSecretRef`. This ensures sensitive authentication details are not committed to Git.
 
 ## 7\. Testing Your Transformer
 
@@ -860,23 +864,23 @@ To get your transformer running locally:
       * `opendatahub-collectors` (contains your collector's source)
       * `infrastructure-v2` (contains the shared `docker-compose.rabbitmq.yml` and overall infrastructure compose files)
 2.  **Navigate to Transformer Directory**: `cd opendatahub-collectors/transformers/foo-bar` (or your specific transformer's path).
-3.  **Create `.env`**: Copy the provided `.env` content into a file named `.env` in this directory. Fill in your AWS credentials (`AWS_ACCESS_KEY_ID`, `AWS_ACCESS_SECRET_KEY`).
+3.  **Create `.env`**: Copy the provided `.env` content into a file named `.env` in this directory and set the required values: the `MQ_*` queue settings, the Timeseries Writer OAuth credentials (see [section 3.3](#33-authentication-for-the-timeseries-writer)), and `RAW_DATA_BRIDGE_ENDPOINT`.
 4.  **Start Infrastructure**: From the `infrastructure-v2` directory, run the base and timeseries compose files:
     ```bash
     cd ../../infrastructure-v2 # Adjust path if needed
     docker compose -f docker-compose.yml up -d # Run in detached mode
     docker compose -f docker-compose.timeseries.yml up -d
     ```
-5.  **Start Transformer**: From your transformer's directory (`opendatahub-collectors/transformer/foo-bar`), run its `docker-compose.yml`:
+5.  **Start Transformer**: From your transformer's directory (`opendatahub-collectors/transformers/foo-bar`), run its `docker-compose.yml`:
     ```bash
     cd opendatahub-collectors/transformers/foo-bar # Adjust path if needed
-    docker compose up --profile bdp --build # Build and run your transformer
+    docker compose --profile bdp up --build # Build and run your transformer
     ```
 
 ### Testing the Data Flow
 
   * **Check Transformer Logs**: Observe the logs of your `app` container.
-  * **RabbitMQ Management**: Access `http://localhost:15672` (guest/guest) in your browser. Navigate to "Queues" and check the `ingress` queue (or whatever `MQ_EXCHANGE` you configured). You should see messages accumulating there.
+  * **RabbitMQ Management**: Access `http://localhost:15673` (guest/guest) in your browser. Navigate to "Queues" and check the `ingress` queue (or whatever `MQ_EXCHANGE` you configured). You should see messages accumulating there.
   * **MongoDB**: Connect to `mongodb://localhost:27017/?directConnection=true` using a tool like MongoDB Compass. You can inspect the raw data stored by the SDK before it's picked up by a transformer.
 
 This setup allows you to develop and test your data transformer in an environment that closely mirrors the production Kubernetes cluster, ensuring smooth integration with the Open Data Hub ecosystem.
