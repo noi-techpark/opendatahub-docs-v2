@@ -11,54 +11,39 @@ import TabItem from '@theme/TabItem';
 
 The Open Data Hub provides structured access to datasets across multiple domains through REST APIs. As an API user or ingestion creator, you interact with these datasets via standardized endpoints, metadata, and response formats. This guide covers the core concepts you need to navigate and retrieve data effectively.
 
-## 1. Data domains and dataset organization
+## 1. Data domains
 
-The Open Data Hub organizes data into **domains**, which group related datasets by social or economic categories. Each domain contains datasets that expose specific types of information.
+Datasets are grouped into **domains**. **Mobility** and **Tourism** are the main focus right now, but other domains are covered as well:
 
-Currently supported domains include:
+- **Mobility**: public transport, parking, e-charging stations, and other station and sensor data.
+- **Tourism**: accommodations, events, points of interest, and activities.
+- **Other**: additional datasets that do not fall under the two main domains.
 
-- **Mobility**: data on public transportation, parking stations, and charging stations.
-- **Tourism**: data on accommodations, events, points of interest, and activities.
-- **Other**: a catch-all category for datasets that do not fit into the primary domains.
+Each dataset is accessible through a REST API endpoint, described in its metadata (see the next section).
 
-Datasets within a domain may overlap in relevance. For example, public transportation data is primarily in the Mobility domain but is also useful for Tourism applications. There is no strict separation between domains, so consider cross-domain data when building integrations.
+## 2. The Metadata API
 
-Each dataset is accessible via a REST API endpoint. The endpoint URL is provided in the dataset's metadata and can be used to retrieve the full dataset or specific items.
+The Open Data Hub publishes a catalog of every dataset through the **Metadata API**. It is the source the [Discovery tool](/tools/discovery) is built on, and you can query it directly:
 
-## 2. Dataset metadata
+- `GET https://tourism.api.opendatahub.com/v1/MetaData` returns the full catalog of datasets.
+- `GET https://tourism.api.opendatahub.com/v1/MetaData/{id}` returns a single dataset's metadata.
 
-Every dataset in the Open Data Hub includes metadata that describes its structure, source, and access properties. This metadata helps you understand how to use the data and what constraints apply.
+Each record describes one dataset and tells you how to consume it. The most useful fields are:
 
-Key metadata fields include:
+| Field | Description |
+| :--- | :--- |
+| `Shortname` | Human-readable name of the dataset. |
+| `BaseUrl` / `ApiUrl` | The API host and the endpoint URL where the dataset is served. |
+| `ApiType` | Which API exposes the dataset (for example, content or timeseries). |
+| `OdhType` / `Category` | The dataset's type and thematic categories. |
+| `ApiAccess` | Whether the dataset is `open` or `closed` (closed datasets require authentication). |
+| `RecordCount` | Record totals, for example `RecordCount.Total`. |
+| `SwaggerUrl` | Link to the Swagger UI for the dataset's endpoint. |
+| `LicenseInfo` | The license under which the data is published (see [Data licensing](/licensing)). |
+| `Deprecated` | `true` if the dataset should no longer be used. |
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `Id` | string | Unique identifier for the dataset. |
-| `ApiIdentifier` | string | The endpoint name used in API calls. |
-| `OdhType` | string | The domain-specific type of the dataset. |
-| `Description` | string | A brief summary of the dataset's content. |
-| `License` | string | The license under which the data is published (e.g., CC-BY, CC0). |
-| `SwaggerUrl` | string | Link to the Swagger UI for exploring the API interactively. |
-| `Self` | string | Direct link to the dataset's API endpoint. |
-| `ApiAccess` | string | Indicates whether the dataset is `open` or `closed`. |
-| `RecordCount` | number | Number of records available; only present for open datasets. |
-| `SingleDataset` | boolean | `true` if the dataset is a single entity; `false` if composed of multiple sources. |
-| `Deprecated` | boolean | `true` if the dataset is deprecated and should not be used. |
-| `_Meta` | object | Contains core metadata about individual data objects. |
-
-The `_Meta` section is included in each data object and contains:
-
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `Id` | string | Unique identifier of the data object. |
-| `Type` | string | The dataset type (e.g., `accommodation`, `eventshort`). |
-| `Source` | string | Origin of the data (e.g., `noi`, `eurac`). |
-| `LastUpdate` | string (ISO 8601) | Timestamp when the data was last imported or saved. |
-| `Reduced` | boolean | `true` if the data has been reduced in scope or detail. |
-| `UpdateInfo` | array | History of updates, including `UpdatedBy`, `UpdateSource`, and `LastUpdate`. |
-
-:::warning
-Check the `Deprecated` field before integrating a dataset. Using deprecated datasets may lead to broken functionality in the future.
+:::info
+Use the Metadata API, or the [Discovery tool](/tools/discovery) built on top of it, to find a dataset's endpoint, access level, and license before you start querying it.
 :::
 
 ## 3. API structure and endpoints

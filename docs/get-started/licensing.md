@@ -96,6 +96,15 @@ To avoid CORS errors in browser-based applications, always use `https://opendata
 
 Company-related information such as names, addresses, and contact details are treated as open data and can be freely shared with third parties. These do not contain personal data and are published under open licensing terms.
 
+## 4. Time series data licensing
+
+Licensing for the Time Series API applies at two levels:
+
+- **Station data** (the station catalog: identifiers, names, coordinates, and metadata) is generally published under **CC0** for all stations.
+- **Measurements** are generally **CC0 when the dataset is open**. Measurements that belong to a **closed** dataset are **proprietary** and require authentication and the appropriate role to read.
+
+To check whether a dataset is open or closed, see its `ApiAccess` value in the [Metadata API](/domains-and-datasets#2-the-metadata-api) or the [Discovery tool](/tools/discovery).
+
 ## Related
 
 - [Filtering and sorting (Content API)](/use-data/content-api/filtering-and-sorting)
