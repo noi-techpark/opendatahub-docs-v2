@@ -92,6 +92,24 @@ const config: Config = {
       { id: 'tools', path: 'docs/tools', routeBasePath: 'tools',
         sidebarPath: require.resolve('./sidebarsArea.ts') },
     ],
+    // The site is hosted as an S3 static website, whose error document is `error.html`.
+    // Docusaurus emits the styled not-found page as `404.html`, so copy it to
+    // `error.html` after the build; otherwise S3 returns its own default error for
+    // every unknown URL.
+    function emitErrorHtmlForS3() {
+      return {
+        name: 'emit-error-html-for-s3',
+        async postBuild({outDir}: {outDir: string}) {
+          const fs = require('fs');
+          const path = require('path');
+          const src = path.join(outDir, '404.html');
+          const dest = path.join(outDir, 'error.html');
+          if (fs.existsSync(src)) {
+            fs.copyFileSync(src, dest);
+          }
+        },
+      };
+    },
     // LLM-ready output: /llms.txt index, /llms-full.txt corpus, and per-page raw .md.
     // HTML-based, so it covers all four docs instances + the custom mega-menu.
     [
