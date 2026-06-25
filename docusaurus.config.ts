@@ -234,7 +234,34 @@ const config: Config = {
             },
           ],
         },
-        {type: 'docSidebar', sidebarId: 'areaSidebar', docsPluginId: 'tools', position: 'left', label: 'Tools'},
+        {
+          label: 'Tools',
+          to: '#',
+          // Header cell first => N+1 rows per column. Columns: Explore=3, Integrate=2.
+          layout: [
+            '0 1',
+            '0 1',
+            '0 1',
+            '0 .',
+          ],
+          items_: [
+            {
+              label: 'Explore data',
+              items: [
+                {label: 'Discovery', sublabel: 'Find datasets and inspect their schema', to: 'tools/discovery', icon: 'FaCompass', activeBaseRegex: '^/tools/discovery'},
+                {label: 'Data Browser', sublabel: 'Browse, filter and manage content', to: 'tools/data-browser', icon: 'FaTable', activeBaseRegex: '^/tools/data-browser'},
+                {label: 'Analytics', sublabel: 'Chart time series without code', to: 'tools/analytics', icon: 'FaChartLine', activeBaseRegex: '^/tools/analytics'},
+              ],
+            },
+            {
+              label: 'Integrate',
+              items: [
+                {label: 'Web Components', sublabel: 'Embeddable data widgets', to: 'tools/web-components', icon: 'BiSolidCollection', activeBaseRegex: '^/tools/web-components'},
+                {label: 'Imageresizer', sublabel: 'Image proxy and resizing', to: 'tools/imageresizer', icon: 'FaImage', activeBaseRegex: '^/tools/imageresizer'},
+              ],
+            },
+          ],
+        },
         // // { to: 'tutorial-basics/congratulations', label: 'Community Blog', position: 'right' },
         // { to: 'tutorial-basics/congratulations', label: 'Team', position: 'right' },
         // {

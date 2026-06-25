@@ -1,7 +1,3 @@
----
-sidebar_position: 2
----
-
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -60,7 +56,7 @@ Filtering in the Data Browser reflects the same constraints as the Content API, 
 
 The Data Browser is also where editors create and maintain tourism content: events, images, tags, and news articles. Those editorial workflows are documented separately, since they are not needed to consume the APIs.
 
-See [Managing content in the Data Browser](/tools/data-browser-content-management).
+See [Managing content in the Data Browser](/tools/data-browser/content-management).
 
 ## 3. Related
 
