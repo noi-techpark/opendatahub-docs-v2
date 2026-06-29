@@ -46,7 +46,7 @@ The Timeseries Writer API SDK (also known as the BDP client) provides a convenie
 
 ## Content API
 
-The Content API SDK (the `clib` package) is a client for the Open Data Hub Content API. It handles OAuth2 authentication against the Core, retries, and tracing, and provides helpers for transformers that push structured content: a generic entity client (`Get`, `Post`, `Put`, `PutMultiple`), an optional change-detection cache (`LoadExisting`, `Cache`), declarative tag sync (`ReadTagDefs`, `SyncTags`), and deterministic IDs (`GenerateID`). See [Transformers for the Content API](/data-ingestion/content-api-transformers).
+The Content API SDK (the `clib` package) is a client for the Open Data Hub Content API. It handles OAuth2 authentication against the Core, retries, and tracing, and provides helpers for transformers that push structured content: a generic entity client (`Get`, `Post`, `Put`, `PutMultiple`), an optional change-detection cache (`LoadExisting`, `Cache`), declarative tag sync (`ReadTagDefs`, `SyncTags`), and deterministic IDs (`GenerateID`). See [Pushing to the Content API](/data-ingestion/data-transformer-from-scratch/content).
 
 | Language | Git Repository | Official Support |
 | :------- | :----------------------------------------------------------- | :--------------- |

@@ -85,11 +85,11 @@ See the `transformers` directory in the monorepo: [https://github.com/noi-techpa
 For transformers, a boilerplate generator is available at `/transformers/boilerplate/setup_go.sh`. This script generates a minimal transformer service that you can extend. The wizard will ask for a two-part provider tuple and Origin, which need to match the tuple provided in the collectors.
 
 :::info
-An in depth guide to develop a Data Transformer from scratch is available [here](data-transformer-from-scratch.mdx)
+An in depth guide to develop a Data Transformer from scratch is available [here](/data-ingestion/data-transformer-from-scratch)
 :::
 
 :::info
-Transformers can target either the Timeseries Writer (time series measurements) or the Content API (structured content such as announcements and points of interest). For the Content API pattern (the `clib` package, change-detection cache, and tag sync), see [Transformers for the Content API](/data-ingestion/content-api-transformers).
+Transformers can target either the Timeseries Writer (time series measurements) or the Content API (structured content such as announcements and points of interest). For the Content API pattern (the `clib` package, change-detection cache, and tag sync), see [Pushing to the Content API](/data-ingestion/data-transformer-from-scratch/content).
 :::
 
 :::info

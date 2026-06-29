@@ -173,7 +173,7 @@ const config: Config = {
               label: 'Get started',
               items: [
                 {label: 'Getting started', sublabel: 'Run the stack locally and ingest your first data', to: 'data-ingestion/getting-started', icon: 'FaRocket', activeBaseRegex: '^/data-ingestion/getting-started'},
-                {label: 'Ingesting time series', sublabel: 'Push time series data into the Open Data Hub', to: 'data-ingestion/ingesting-time-series', icon: 'FaClock', activeBaseRegex: '^/data-ingestion/ingesting-time-series'},
+                {label: 'Ingesting time series', sublabel: 'Transform raw data into time series measurements', to: 'data-ingestion/data-transformer-from-scratch/timeseries', icon: 'FaClock', activeBaseRegex: '^/data-ingestion/data-transformer-from-scratch/timeseries'},
               ],
             },
             {

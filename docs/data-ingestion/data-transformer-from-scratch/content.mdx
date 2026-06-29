@@ -1,25 +1,18 @@
 ---
-sidebar_position: 4
-slug: /content-api-transformers
+sidebar_position: 2
+slug: /data-transformer-from-scratch/content
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Transformers for the Content API
+# Pushing to the Content API
 
-A transformer turns raw collected data into Open Data Hub entities. Time series transformers push measurements to the Timeseries Writer with `go-bdp-client` (see [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch)). When your data is structured **content** rather than measurements (for example announcements, points of interest, or events), you push it to the **Content API** instead, using the `clib` package of the `opendatahub-go-sdk`.
+This page covers the write side of a transformer that produces **structured content** (announcements, points of interest, events, and similar), using the `clib` package of the `opendatahub-go-sdk`. For the shared transformer skeleton (the SDK listener, environment variables, containerization, and local run), see [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch).
 
-This guide walks through that pattern, using the `traffic-event-a22-opendata` transformer (which turns A22 motorway events into Content API `Announcement` entities) as the reference implementation.
+This guide uses the `traffic-event-a22-opendata` transformer (which turns A22 motorway events into Content API `Announcement` entities) as the reference implementation.
 
-## 1. When to use the Content API
-
-- **Time series** measurements from stations and sensors go to the Timeseries Writer with `go-bdp-client`. See [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch).
-- **Structured content** entities (announcements, points of interest, events, and similar) go to the Content API with `clib`.
-
-Both kinds of transformer share the same ingestion plumbing: they consume raw data from the message queue with `ms.InitWithEnv` and `tr.NewTr`. Only the write side differs.
-
-## 2. The clib package
+## 1. The clib package
 
 `github.com/noi-techpark/opendatahub-go-sdk/clib` is the SDK's Content API client. Its `ContentAPI` interface exposes four operations:
 
@@ -64,7 +57,7 @@ In addition to the standard transformer variables (`MQ_*`, `LOG_LEVEL`, and tele
 | `ODH_CORE_TOKEN_CLIENT_ID` | Client ID authorized to write content. |
 | `ODH_CORE_TOKEN_CLIENT_SECRET` | Client secret. |
 
-## 3. Stateful memory with the cache (optional)
+## 2. Stateful memory with the cache (optional)
 
 Not every transformer needs this. If yours simply creates or overwrites entities, call `Post` or `Put` directly and skip to the next section. The cache is for transformers that must **detect changes** and keep a set of entities in sync: create new ones, update only the ones that changed, and end ones that disappeared from the source. The Content API itself is the state store, and `clib` rebuilds the cache from it on startup, so there is no separate database to manage.
 
@@ -128,7 +121,7 @@ for id, entry := range annCache.Entries() {
 }
 ```
 
-## 4. Deterministic IDs
+## 3. Deterministic IDs
 
 Give every entity a stable ID derived from a unique source key, so that re-processing the same input updates the same entity instead of creating a duplicate:
 
@@ -142,7 +135,7 @@ func generateOpendataID(event dto.A22OpendataEvent) string {
 
 `GenerateID(prefix, input)` returns `{prefix}:{uuid5(input)}`. The UUID is a deterministic version 5 hash of the input, so the same input always yields the same ID.
 
-## 5. Tag sync
+## 4. Tag sync
 
 Tags are defined declaratively in a JSON file and synced to the Content API on startup. Each definition carries its multilingual names and the entity types it is valid for:
 
@@ -177,7 +170,7 @@ ms.FailOnError(context.Background(), err, "failed to sync tags")
 
 `SyncTags` creates each tag with a `POST`, using the `id` from the definition as the tag's ID. Tags that already exist are ignored (the SDK returns `ErrAlreadyExists`, which `SyncTags` treats as success), so it is safe to run on every startup. Without an explicit `LicenseInfo`, tags default to `CC0`.
 
-## 6. Putting it together
+## 5. Putting it together
 
 The `main` function wires the standard ingestion listener to the `clib` client, the cache, and tag sync:
 
@@ -212,9 +205,9 @@ func Transform(ctx context.Context, r *rdb.Raw[dto.Root]) error {
 }
 ```
 
-The listener is the same one every transformer uses; the right way to consume the raw data depends on **how the collector stored it**. `tr.NewTr[string]` together with `RawString2JsonMiddleware` is correct when the collector saved the raw payload as a serialized JSON string (a common case). If the collector stored structured data, consume it directly with `tr.NewTr[YourDTO]` and no middleware. See [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch) for that distinction. Only the body of `Transform` and the `clib` write calls are specific to the Content API.
+The listener is the same one every transformer uses; the right way to consume the raw data depends on **how the collector stored it** (`tr.NewTr[string]` with `RawString2JsonMiddleware` for a serialized JSON string, or `tr.NewTr[YourDTO]` directly for structured data). See [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch#33-consuming-raw-data-with-the-sdk). Only the body of `Transform` and the `clib` write calls are specific to the Content API.
 
-## 7. Testing
+## 6. Testing
 
 `clib` ships a mock of the `ContentAPI` interface, so you can test transformation logic without a live Core. Inject `clibmock.ContentMock` in place of the real client and assert on the calls it records:
 
@@ -224,12 +217,13 @@ import "github.com/noi-techpark/opendatahub-go-sdk/clib/clibmock"
 
 This is the same input/output, golden-file approach used with `bdpmock` for time series transformers (the example ships `testdata/in*.json` and `out*.json`).
 
-## 8. Reference implementation
+## 7. Reference implementation
 
 The complete, runnable example is `transformers/traffic-event-a22-opendata` in the [opendatahub-collectors](https://github.com/noi-techpark/opendatahub-collectors/tree/main/transformers/traffic-event-a22-opendata) monorepo. It shows mapping, hashing, ended-event detection, geo enrichment, the `clib` content model (built on `clib.Metadata`, `clib.LicenseInfo`, and `clib.GpsInfo`), and the full `.env`, Dockerfile, and Helm configuration.
 
 ## Related
 
-- [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch) (Timeseries Writer)
+- [Developing a Data Transformer from Scratch](/data-ingestion/data-transformer-from-scratch) (the shared skeleton)
+- [Pushing to the Timeseries Writer (BDP)](/data-ingestion/data-transformer-from-scratch/timeseries)
 - [SDKs](/data-ingestion/sdks)
 - [Content API reference](/use-data/content-api/reference)
