@@ -5,7 +5,7 @@ slug: /sdks
 
 # SDKs
 
-The Open Data Hub provides Software Development Kits (SDKs) to streamline the development of data integration components, such as data collectors and transformers. These SDKs abstract away common concerns like messaging, telemetry, and interaction with the Timeseries Writer API, allowing developers to focus on the core business logic of data acquisition and transformation.
+The Open Data Hub provides Software Development Kits (SDKs) to streamline the development of data integration components, such as data collectors and transformers. These SDKs abstract away common concerns like messaging, telemetry, and interaction with the Timeseries Writer and Content APIs, allowing developers to focus on the core business logic of data acquisition and transformation.
 
 Below is an overview of the available SDKs, categorized by their primary functional area.
 
@@ -44,6 +44,14 @@ The Timeseries Writer API SDK (also known as the BDP client) provides a convenie
 | :------- | :----------------------------------------------------------- | :--------------- |
 | Go | [`github.com/noi-techpark/go-bdp-client`](https://github.com/noi-techpark/go-bdp-client) | Yes |
 
+## Content API
+
+The Content API SDK (the `clib` package) is a client for the Open Data Hub Content API. It handles OAuth2 authentication against the Core, retries, and tracing, and provides helpers for transformers that push structured content: a generic entity client (`Get`, `Post`, `Put`, `PutMultiple`), an optional change-detection cache (`LoadExisting`, `Cache`), declarative tag sync (`ReadTagDefs`, `SyncTags`), and deterministic IDs (`GenerateID`). See [Transformers for the Content API](/data-ingestion/content-api-transformers).
+
+| Language | Git Repository | Official Support |
+| :------- | :----------------------------------------------------------- | :--------------- |
+| Go | [`github.com/noi-techpark/opendatahub-go-sdk/clib`](https://github.com/noi-techpark/opendatahub-go-sdk/tree/main/clib) | Yes |
+
 ## Testing
 
 The Testing SDKs and utilities are designed to simplify the creation of robust unit and integration tests for your data integration components. They often provide mock implementations of external services, allowing for deterministic and isolated testing of transformation logic and API interactions.
@@ -52,3 +60,4 @@ The Testing SDKs and utilities are designed to simplify the creation of robust u
 | :------- | :----------------------------------------------------------- | :--------------- |
 | Go | [`github.com/noi-techpark/go-bdp-client/bdpmock`](https://github.com/noi-techpark/go-bdp-client/tree/main/bdpmock) | Yes |
 | Go | [`github.com/noi-techpark/opendatahub-go-sdk/testsuite`](https://github.com/noi-techpark/opendatahub-go-sdk/tree/main/testsuite) | Yes |
+| Go | [`github.com/noi-techpark/opendatahub-go-sdk/clib/clibmock`](https://github.com/noi-techpark/opendatahub-go-sdk/tree/main/clib/clibmock) | Yes |

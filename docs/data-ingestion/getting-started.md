@@ -12,7 +12,7 @@ This guide provides a comprehensive overview of setting up your local developmen
 A typical Open Data Hub data integration pipeline involves two primary microservices:
 
 * **Data Collector**: Responsible for collecting raw data from external data providers and publishing it to a message queue.
-* **Transformer**: Listens for raw data events from the message queue, transforms the raw data into the Open Data Hub API format, and pushes it to the `opendatahub-timeseries-writer` (BDP).
+* **Transformer**: Listens for raw data events from the message queue, transforms the raw data into the Open Data Hub format, and pushes it to the Open Data Hub: time series measurements to the `opendatahub-timeseries-writer` (BDP), or structured content to the `Content API`.
 
 The data flow is as follows:
 
@@ -86,6 +86,10 @@ For transformers, a boilerplate generator is available at `/transformers/boilerp
 
 :::info
 An in depth guide to develop a Data Transformer from scratch is available [here](data-transformer-from-scratch.mdx)
+:::
+
+:::info
+Transformers can target either the Timeseries Writer (time series measurements) or the Content API (structured content such as announcements and points of interest). For the Content API pattern (the `clib` package, change-detection cache, and tag sync), see [Transformers for the Content API](/data-ingestion/content-api-transformers).
 :::
 
 :::info
