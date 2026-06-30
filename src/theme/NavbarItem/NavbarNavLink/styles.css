@@ -30,3 +30,14 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   color: var(--ifm-menu-color);
   font-size: 0.8rem;
 }
+
+/*
+ * Active-page suffix for the mega-dropdown navbar button: rendered from the
+ * `data-active-page` attribute so the user sees "Area | Page", but the suffix is a
+ * CSS pseudo-element and therefore NOT part of the element's text content — which
+ * keeps the Typesense search scraper's lvl0 (the active navbar link) a clean
+ * section name instead of "Area | Page".
+ */
+.link__label[data-active-page]::after {
+  content: attr(data-active-page);
+}

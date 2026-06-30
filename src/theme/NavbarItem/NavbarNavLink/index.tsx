@@ -103,6 +103,13 @@ export const getIconComponent = (iconName: string): React.ComponentType | null =
 export interface Props extends OriginalProps {
   sublabel?: string;
   icon?: string;
+  /**
+   * Optional "active page" suffix shown after the label (e.g. " | Content API
+   * reference"). Rendered as a CSS pseudo-element (`::after` via a data attribute)
+   * so it is visible to users but excluded from the DOM text the search scraper
+   * indexes — keeping the Typesense `lvl0` a clean section name.
+   */
+  activePageLabel?: string;
 }
 
 export default function NavbarNavLink({
@@ -113,6 +120,7 @@ export default function NavbarNavLink({
   label,
   sublabel,
   icon,
+  activePageLabel,
   activeClassName = '',
   prependBaseUrlToHref,
   ...props
@@ -157,7 +165,12 @@ export default function NavbarNavLink({
           </Suspense>
         )} */}
         <div className='link__body'>
-          <div className='link__label'>
+          <div
+            className='link__label'
+            data-active-page={
+              activePageLabel ? ` | ${activePageLabel}` : undefined
+            }
+          >
             {label}
             {isExternalLink && (
               <IconExternalLink

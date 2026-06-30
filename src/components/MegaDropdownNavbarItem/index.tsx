@@ -194,10 +194,15 @@ function MegaDropdownNavbarItemDesktop({
   const ungroupedItems = getUngroupedItemsList(items);
 
   // Active-page label: when the user is anywhere inside this dropdown's area
-  // (props.areaBasePath, e.g. "/use-data"), show "Area | <current page title>".
-  // The page title is read from document.title on the client; on the server we
-  // render just the area label and it fills in right after hydration / navigation.
-  const areaBasePath = (props as {areaBasePath?: string}).areaBasePath;
+  // (props.areaBasePath, e.g. "/use-data"), the navbar shows "Area | <current page
+  // title>". The area name is the real element text/label; the "| <page>" suffix is
+  // rendered by NavbarNavLink as a CSS pseudo-element, so it stays out of the DOM
+  // text the Typesense scraper indexes (keeping search lvl0 a clean section name).
+  // The page title is read from document.title on the client.
+  const {areaBasePath, ...dropdownProps} = props as {
+    areaBasePath?: string;
+    [key: string]: unknown;
+  };
   const inArea =
     !!areaBasePath &&
     (localPathname === areaBasePath ||
@@ -228,10 +233,7 @@ function MegaDropdownNavbarItemDesktop({
     return () => observer.disconnect();
   }, []);
 
-  const dropdownProps =
-    inArea && pageTitle
-      ? {...props, label: `${props.label} | ${pageTitle}`}
-      : props;
+  const activePageLabel = inArea && pageTitle ? pageTitle : '';
   const containsActive =
     inArea || containsActiveItems(ungroupedItems, localPathname);
 
@@ -319,6 +321,7 @@ function MegaDropdownNavbarItemDesktop({
           'navbar__link--active': containsActive,
         })}
         {...dropdownProps}
+        activePageLabel={activePageLabel}
         onClick={(e) => e.preventDefault()}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
