@@ -113,31 +113,58 @@ function getUngroupedItemsList(groupedItems) {
  according to the selected dropdown item
  **/
 function getDropdownProps(props, items, localPathname) {
-  const activeItem = items.filter((item) => isItemActive(item, localPathname));
-  if (activeItem.length) {
+  // Pick the most specific matching item (longest matched route) so the label reflects
+  // the exact page, not just the first item that happens to match.
+  let active = null;
+  let bestLen = -1;
+  for (const item of items) {
+    const len = itemMatchLen(item, localPathname);
+    if (len > bestLen) {
+      bestLen = len;
+      active = item;
+    }
+  }
+  if (active) {
     return {
-      activeBaseRegex: activeItem[0].activeBaseRegex,
-      label: props.label + ' | ' + activeItem[0].label,
+      ...props,
+      activeBaseRegex: active.activeBaseRegex,
+      label: props.label + ' | ' + active.label,
     };
   }
-
   return props;
+}
+
+// Returns how specifically an item matches the current path: the length of the matched
+// route (longer = more specific), or -1 for no match. Matching is primarily by the
+// item's own `to` (exact, or as a path prefix for sub-pages), with activeBaseRegex /
+// activeBasePath as weaker fallbacks. This lets the dropdown label reflect the actual
+// page the user is on, without needing a per-item activeBaseRegex.
+function itemMatchLen(
+  item: LinkLikeNavbarItemProps,
+  localPathname: string,
+): number {
+  const path = (localPathname || '/').replace(/\/+$/, '') || '/';
+  if (item.to) {
+    const raw = item.to.startsWith('/') ? item.to : '/' + item.to;
+    const toPath = raw.replace(/\/+$/, '') || '/';
+    if (path === toPath || path.startsWith(toPath + '/')) {
+      return toPath.length;
+    }
+  }
+  if (isRegexpStringMatch(item.activeBaseRegex, localPathname)) {
+    return 0;
+  }
+  if (item.activeBasePath && localPathname.startsWith(item.activeBasePath)) {
+    return 0;
+  }
+  return -1;
 }
 
 function isItemActive(
   item: LinkLikeNavbarItemProps,
   localPathname: string,
 ): boolean {
-//   if (isSamePath(item.to, localPathname)) {
-//     return true;
-//   }
-  if (isRegexpStringMatch(item.activeBaseRegex, localPathname)) {
-    return true;
-  }
-  if (item.activeBasePath && localPathname.startsWith(item.activeBasePath)) {
-    return true;
-  }
-  return false;
+  return itemMatchLen(item, localPathname) >= 0;
 }
 
 function containsActiveItems(
@@ -164,16 +191,49 @@ function MegaDropdownNavbarItemDesktop({
 //   const { isNavbarVisible } = useHideableNavbar(hideOnScroll);
 
   const itemCursors = items.map(createItemCursor);
-  /**
-   Added consts to get the dropdown label if a dropdown item is selected
-   **/
   const ungroupedItems = getUngroupedItemsList(items);
-  const dropdownProps = getDropdownProps(
-    props,
-    ungroupedItems,
-    useLocation().pathname,
-  );
-  const containsActive = containsActiveItems(ungroupedItems, localPathname);
+
+  // Active-page label: when the user is anywhere inside this dropdown's area
+  // (props.areaBasePath, e.g. "/use-data"), show "Area | <current page title>".
+  // The page title is read from document.title on the client; on the server we
+  // render just the area label and it fills in right after hydration / navigation.
+  const areaBasePath = (props as {areaBasePath?: string}).areaBasePath;
+  const inArea =
+    !!areaBasePath &&
+    (localPathname === areaBasePath ||
+      localPathname.startsWith(areaBasePath + '/'));
+
+  const [pageTitle, setPageTitle] = useState('');
+  useEffect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+    const update = () => {
+      const full = document.title || '';
+      const sep = full.lastIndexOf(' | ');
+      setPageTitle(sep > 0 ? full.slice(0, sep).trim() : '');
+    };
+    update();
+    // Keep in sync as the page <title> changes on client-side navigation.
+    const titleEl = document.querySelector('title');
+    if (!titleEl) {
+      return;
+    }
+    const observer = new MutationObserver(update);
+    observer.observe(titleEl, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const dropdownProps =
+    inArea && pageTitle
+      ? {...props, label: `${props.label} | ${pageTitle}`}
+      : props;
+  const containsActive =
+    inArea || containsActiveItems(ungroupedItems, localPathname);
 
   // Layout is in row major order due to CSS grid area syntax
   const rowCount = layout.length;

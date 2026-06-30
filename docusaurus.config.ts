@@ -159,6 +159,7 @@ const config: Config = {
         {
           label: 'Data Ingestion',
           to: '#',
+          areaBasePath: '/data-ingestion',
           // NOTE: each column renders a header cell first, so a column with N items
           // needs N+1 rows. Columns: GetStarted=2, Build=2, Blueprints=4, Reference=3.
           layout: [
@@ -205,6 +206,7 @@ const config: Config = {
         {
           label: 'Using our Data',
           to: '#',
+          areaBasePath: '/use-data',
           // Header cell first => N+1 rows per column. Columns: Content=6, TimeSeries=3,
           // Transmodel=2, Auth=2.
           layout: [
@@ -220,7 +222,7 @@ const config: Config = {
             {
               label: 'Content API',
               items: [
-                {label: 'Reference', sublabel: 'Endpoints, fields and the datamodel', to: 'use-data/content-api/reference', icon: 'FaBook', activeBaseRegex: '^/use-data/content-api/'},
+                {label: 'Reference', sublabel: 'Endpoints, fields and the datamodel', to: 'use-data/content-api/reference', icon: 'FaBook', activeBaseRegex: '^/use-data/content-api/reference'},
                 {label: 'Filtering and sorting', sublabel: 'Search, filter, sort and paginate', to: 'use-data/content-api/filtering-and-sorting', icon: 'FaFilter'},
                 {label: 'Output formats', sublabel: 'JSON, CSV and response shaping', to: 'use-data/content-api/output-formats', icon: 'FaFileExport'},
                 {label: 'Deprecations', sublabel: 'Removed fields and datamodel migration', to: 'use-data/content-api/deprecations', icon: 'FaExclamationTriangle'},
@@ -231,7 +233,7 @@ const config: Config = {
             {
               label: 'Time Series API',
               items: [
-                {label: 'Reference', sublabel: 'Mobility and time series endpoints', to: 'use-data/time-series-api/reference', icon: 'FaChartLine', activeBaseRegex: '^/use-data/time-series-api/'},
+                {label: 'Reference', sublabel: 'Mobility and time series endpoints', to: 'use-data/time-series-api/reference', icon: 'FaChartLine', activeBaseRegex: '^/use-data/time-series-api/reference'},
                 {label: 'Filtering', sublabel: 'Filter by station type, tags and operators', to: 'use-data/time-series-api/filtering', icon: 'FaFilter'},
                 {label: 'Swagger', sublabel: 'Interactive Time Series API explorer', to: 'use-data/time-series-api/swagger', icon: 'FaFlask'},
               ],
@@ -239,14 +241,14 @@ const config: Config = {
             {
               label: 'Transmodel API',
               items: [
-                {label: 'NeTEx & SIRI-Lite', sublabel: 'Public transport data standards', to: 'use-data/transmodel-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/transmodel-api/'},
+                {label: 'NeTEx & SIRI-Lite', sublabel: 'Public transport data standards', to: 'use-data/transmodel-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/transmodel-api/reference'},
                 {label: 'Swagger', sublabel: 'Interactive Transmodel API explorer', to: 'use-data/transmodel-api/swagger', icon: 'FaFlask'},
               ],
             },
             {
               label: 'Authentication & access',
               items: [
-                {label: 'Authentication', sublabel: 'Keycloak, OAuth2 tokens and RBAC', to: 'use-data/authentication-and-access/authentication', icon: 'FaKey', activeBaseRegex: '^/use-data/authentication-and-access/'},
+                {label: 'Authentication', sublabel: 'Keycloak, OAuth2 tokens and RBAC', to: 'use-data/authentication-and-access/authentication', icon: 'FaKey', activeBaseRegex: '^/use-data/authentication-and-access/authentication'},
                 {label: 'Quotas, CLI & R', sublabel: 'Rate limits, CLI access and the R package', to: 'use-data/authentication-and-access/quotas-and-tools', icon: 'FaTachometerAlt'},
               ],
             },
@@ -255,6 +257,7 @@ const config: Config = {
         {
           label: 'Tools',
           to: '#',
+          areaBasePath: '/tools',
           // Header cell first => N+1 rows per column. Columns: Explore=3, Integrate=2.
           layout: [
             '0 1',
