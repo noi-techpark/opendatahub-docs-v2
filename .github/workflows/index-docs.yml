@@ -17,7 +17,7 @@ on:
 
 env:
   TYPESENSE_HOST_TEST: "typesense.docs.testingmachine.eu"
-  TYPESENSE_HOST_PROD: "search.opendatahub.com"    # TODO: update
+  TYPESENSE_HOST_PROD: "search.docs.opendatahub.com"
 
 jobs:
   index:
