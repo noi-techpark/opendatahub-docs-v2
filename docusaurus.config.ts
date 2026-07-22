@@ -92,6 +92,16 @@ const config: Config = {
       { id: 'tools', path: 'docs/tools', routeBasePath: 'tools',
         sidebarPath: require.resolve('./sidebarsArea.ts') },
     ],
+    //  --- Matomo plugin ---
+    [
+      "@whitespace-se/docusaurus-plugin-matomo",
+      {
+        matomoUrl: "https://digital.matomo.cloud",
+        siteId: "31",
+        debug: true,
+      },
+    ],
+
     // The site is hosted as an S3 static website, whose error document is `error.html`.
     // Docusaurus emits the styled not-found page as `404.html`, so copy it to
     // `error.html` after the build; otherwise S3 returns its own default error for
