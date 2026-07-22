@@ -98,7 +98,6 @@ const config: Config = {
       {
         matomoUrl: "https://digital.matomo.cloud",
         siteId: "31",
-        debug: true,
       },
     ],
 
