@@ -87,7 +87,7 @@ These can still be retrieved, but response times may be slow. Caching for these 
 
 ## 7. Related
 
-- [Content API reference](../content-api/reference)
+- [Content API reference](https://docs.opendatahub.com/use-data/content-api/reference)
 - [Geo API GitHub repository](https://github.com/noi-techpark/opendatahub-geo-api)
 - [Geo API Swagger UI](https://geo.api.opendatahub.com/swagger)
 - [Geo API examples](https://geo.api.opendatahub.com/examples/)
