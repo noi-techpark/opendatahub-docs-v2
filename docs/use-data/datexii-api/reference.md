@@ -67,9 +67,6 @@ curl "https://tourism.api.opendatahub.com/v1/Accommodation?pagesize=10&pagenumbe
 </TabItem>
 </Tabs>
 
-</TabItem>
-</Tabs>
-
 ## 4. Utility endpoints
 
 ### 4.1. Tags
