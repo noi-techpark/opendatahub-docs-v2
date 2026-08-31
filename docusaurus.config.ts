@@ -257,8 +257,8 @@ const config: Config = {
             {
               label: 'DATEXII API',
               items: [
-                { label: 'Reference', sublabel: 'Traffic and road events standards', to: 'use-data/datex-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/datex-api/reference' },
-                { label: 'Swagger', sublabel: 'Interactive DATEXII API explorer', to: 'use-data/datex-api/swagger', icon: 'FaFlask' },
+                { label: 'Reference', sublabel: 'Traffic and road events standards', to: 'use-data/datexii-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/datex-api/reference' },
+                { label: 'Swagger', sublabel: 'Interactive DATEXII API explorer', to: 'use-data/datexii-api/swagger', icon: 'FaFlask' },
               ],
             },
             {
