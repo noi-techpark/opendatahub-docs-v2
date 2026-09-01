@@ -219,13 +219,13 @@ const config: Config = {
           // Header cell first => N+1 rows per column. Columns: Content=6, TimeSeries=3,
           // Transmodel=2, Auth=2.
           layout: [
-            '0 1 2 3',
-            '0 1 2 3',
-            '0 1 2 3',
-            '0 1 . .',
-            '0 . . .',
-            '0 . . .',
-            '0 . . .',
+            '0 1 2 3 4',
+            '0 1 2 3 4',
+            '0 1 2 3 4',
+            '0 1 . . .',
+            '0 . . . .',
+            '0 . . . .',
+            '0 . . . .',
           ],
           items_: [
             {
@@ -252,6 +252,13 @@ const config: Config = {
               items: [
                 {label: 'NeTEx & SIRI-Lite', sublabel: 'Public transport data standards', to: 'use-data/transmodel-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/transmodel-api/reference'},
                 {label: 'Swagger', sublabel: 'Interactive Transmodel API explorer', to: 'use-data/transmodel-api/swagger', icon: 'FaFlask'},
+              ],
+            },
+            {
+              label: 'DATEXII API',
+              items: [
+                { label: 'Reference', sublabel: 'Traffic and road events standards', to: 'use-data/datexii-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/datex-api/reference' },
+                { label: 'Swagger', sublabel: 'Interactive DATEXII API explorer', to: 'use-data/datexii-api/swagger', icon: 'FaFlask' },
               ],
             },
             {
