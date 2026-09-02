@@ -217,15 +217,15 @@ const config: Config = {
           to: '#',
           areaBasePath: '/use-data',
           // Header cell first => N+1 rows per column. Columns: Content=6, TimeSeries=3,
-          // Transmodel=2, Auth=2.
+          // Transmodel=2, Geo=2, DATEXII=2, Auth=2.
           layout: [
-            '0 1 2 3 4',
-            '0 1 2 3 4',
-            '0 1 2 3 4',
-            '0 1 . . .',
-            '0 . . . .',
-            '0 . . . .',
-            '0 . . . .',
+            '0 1 2 3 4 5',
+            '0 1 2 3 4 5',
+            '0 1 2 3 4 5',
+            '0 1 . . . .',
+            '0 . . . . .',
+            '0 . . . . .',
+            '0 . . . . .',
           ],
           items_: [
             {
@@ -255,9 +255,16 @@ const config: Config = {
               ],
             },
             {
+              label: 'Geo API',
+              items: [
+                {label: 'Reference', sublabel: 'Vector tiles for map rendering', to: 'use-data/geo-api/reference', icon: 'FaMapMarkedAlt', activeBaseRegex: '^/use-data/geo-api/reference'},
+                {label: 'Swagger', sublabel: 'Interactive Geo API explorer', to: 'use-data/geo-api/swagger', icon: 'FaFlask'},
+              ],
+            },
+            {
               label: 'DATEXII API',
               items: [
-                { label: 'Reference', sublabel: 'Traffic and road events standards', to: 'use-data/datexii-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/datex-api/reference' },
+                { label: 'Reference', sublabel: 'Traffic and road events standards', to: 'use-data/datexii-api/reference', icon: 'FaBus', activeBaseRegex: '^/use-data/datexii-api/reference' },
                 { label: 'Swagger', sublabel: 'Interactive DATEXII API explorer', to: 'use-data/datexii-api/swagger', icon: 'FaFlask' },
               ],
             },
